@@ -6,7 +6,8 @@ import 'bindings/initial_binding.dart';
 import 'controllers/theme_controller.dart';
 import 'localization/app_translations.dart';
 import 'localization/translation_service.dart';
-import 'screens/main_navigation.dart';
+import 'routes/app_pages.dart';
+import 'routes/app_routes.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: Get.find<ThemeController>().themeMode,
-      home: const MainNavigation(),
+      initialRoute: AppRoutes.home,
+      getPages: AppPages.pages,
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../localization/locale_keys.dart';
 import '../models/tool_models.dart';
+import '../controllers/image_to_pdf_controller.dart';
 
 class HomeController extends GetxController {
   final sections = const <ToolSection>[
@@ -220,6 +221,11 @@ class HomeController extends GetxController {
   ];
 
   void onToolTap(ToolItem tool) {
+    if (tool.id == ToolId.imageToPdf) {
+      ImageToPdfController.startFromHome();
+      return;
+    }
+
     Get.snackbar(
       tool.titleKey.tr,
       LocaleKeys.toolComingSoon.tr,

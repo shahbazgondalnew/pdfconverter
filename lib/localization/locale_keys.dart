@@ -56,4 +56,38 @@ abstract final class LocaleKeys {
   static const toolUnlockPdf = 'tool_unlock_pdf';
   static const toolSignPdf = 'tool_sign_pdf';
   static const toolComingSoon = 'tool_coming_soon';
+
+  // Image to PDF flow
+  static const addImages = 'add_images';
+  static const addMore = 'add_more';
+  static const fromGallery = 'from_gallery';
+  static const fromCamera = 'from_camera';
+  static const fromFile = 'from_file';
+  static const selectedImages = 'selected_images';
+  static const editImage = 'edit_image';
+  static const deleteImage = 'delete_image';
+  static const crop = 'crop';
+  static const rotateLeft = 'rotate_left';
+  static const rotateRight = 'rotate_right';
+  static const fitSettings = 'fit_settings';
+  static const fitCenter = 'fit_center';
+  static const fitContain = 'fit_contain';
+  static const fitCover = 'fit_cover';
+  static const fitFill = 'fit_fill';
+  static const fitWidth = 'fit_width';
+  static const fitHeight = 'fit_height';
+  static const pdfBackground = 'pdf_background';
+  static const pdfBackgroundHint = 'pdf_background_hint';
+  static const bgWhite = 'bg_white';
+  static const bgBlack = 'bg_black';
+  static const bgGray = 'bg_gray';
+  static const bgCustom = 'bg_custom';
+  static const noImagesSelected = 'no_images_selected';
+  static const pickImagesFailed = 'pick_images_failed';
+  static const cropFailed = 'crop_failed';
+  static const createPdf = 'create_pdf';
+  static const pdfReadySoon = 'pdf_ready_soon';
+  static const preview = 'preview';
+  static const cancel = 'cancel';
+  static const save = 'save';
 }
