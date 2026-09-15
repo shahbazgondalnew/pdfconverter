@@ -8,10 +8,12 @@ import 'localization/app_translations.dart';
 import 'localization/translation_service.dart';
 import 'routes/app_pages.dart';
 import 'routes/app_routes.dart';
+import 'services/conversion_storage.dart';
 import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await ConversionStorage.init();
   Get.put(ThemeController(), permanent: true);
   runApp(const MyApp());
 }

@@ -90,4 +90,18 @@ abstract final class LocaleKeys {
   static const preview = 'preview';
   static const cancel = 'cancel';
   static const save = 'save';
+  static const convertingPdf = 'converting_pdf';
+  static const conversionProgress = 'conversion_progress';
+  static const pleaseWait = 'please_wait';
+  static const conversionFailed = 'conversion_failed';
+  static const pdfReady = 'pdf_ready';
+  static const sharePdf = 'share_pdf';
+  static const savePdf = 'save_pdf';
+  static const openPdf = 'open_pdf';
+  static const done = 'done';
+  static const pdfMeta = 'pdf_meta';
+  static const savedLocallyHint = 'saved_locally_hint';
+  static const sharePdfText = 'share_pdf_text';
+  static const fileMissing = 'file_missing';
+  static const openPdfFailed = 'open_pdf_failed';
 }

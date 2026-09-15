@@ -3,11 +3,19 @@ import 'package:get/get.dart';
 
 import '../controllers/history_controller.dart';
 import '../localization/locale_keys.dart';
+import '../models/conversion_record.dart';
 import '../theme/app_colors.dart';
 import '../widgets/app_background.dart';
 
 class HistoryScreen extends GetView<HistoryController> {
   const HistoryScreen({super.key});
+
+  String _typeLabel(ConversionType type) {
+    switch (type) {
+      case ConversionType.imageToPdf:
+        return LocaleKeys.toolImageToPdf.tr;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,54 +64,85 @@ class HistoryScreen extends GetView<HistoryController> {
                   return ListView.separated(
                     physics: const BouncingScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 110),
-                    itemCount: controller.conversions.length,
+                    itemCount: controller.records.length,
                     separatorBuilder: (_, _) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
-                      final name = controller.conversions[index];
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 14,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurface : Colors.white,
+                      final record = controller.records[index];
+                      return Material(
+                        color: isDark ? AppColors.darkSurface : Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                        child: InkWell(
                           borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                            color: isDark
-                                ? Colors.white.withValues(alpha: 0.06)
-                                : const Color(0xFFEEDFDF),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 46,
-                              height: 46,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
-                                color: AppColors.brand.withValues(alpha: 0.12),
-                              ),
-                              child: const Icon(
-                                Icons.picture_as_pdf_rounded,
-                                color: AppColors.brand,
+                          onTap: () => controller.openRecord(record),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                color: isDark
+                                    ? Colors.white.withValues(alpha: 0.06)
+                                    : const Color(0xFFEEDFDF),
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                name,
-                                style: textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w600,
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 46,
+                                  height: 46,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color:
+                                        AppColors.brand.withValues(alpha: 0.12),
+                                  ),
+                                  child: const Icon(
+                                    Icons.picture_as_pdf_rounded,
+                                    color: AppColors.brand,
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        record.name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: textTheme.titleSmall?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${_typeLabel(record.conversionType)} · ${record.formattedSize}',
+                                        style: textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  tooltip: LocaleKeys.sharePdf.tr,
+                                  onPressed: () =>
+                                      controller.shareRecord(record),
+                                  icon: const Icon(Icons.ios_share_rounded),
+                                ),
+                                IconButton(
+                                  tooltip: LocaleKeys.deleteImage.tr,
+                                  onPressed: () =>
+                                      controller.deleteRecord(record),
+                                  icon: const Icon(Icons.delete_outline_rounded),
+                                ),
+                              ],
                             ),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                          ],
+                          ),
                         ),
                       );
                     },

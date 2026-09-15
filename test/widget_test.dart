@@ -6,8 +6,14 @@ import 'package:pdfconverter/controllers/theme_controller.dart';
 import 'package:pdfconverter/localization/app_translations.dart';
 import 'package:pdfconverter/localization/translation_service.dart';
 import 'package:pdfconverter/main.dart';
+import 'package:pdfconverter/services/conversion_storage.dart';
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    await ConversionStorage.init(forTest: true);
+  });
+
   setUp(() {
     Get.reset();
     Get.testMode = true;

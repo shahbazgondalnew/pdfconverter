@@ -116,6 +116,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Add more',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _zh = {
@@ -203,6 +216,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: '取消',
     LocaleKeys.save: '保存',
     LocaleKeys.addMore: '添加更多',
+    LocaleKeys.convertingPdf: '正在转换为 PDF',
+    LocaleKeys.conversionProgress: '已转换 @done / @total 张图片',
+    LocaleKeys.pleaseWait: '请稍候，请勿关闭应用。',
+    LocaleKeys.conversionFailed: '转换失败，请重试。',
+    LocaleKeys.sharePdf: '分享',
+    LocaleKeys.savePdf: '保存',
+    LocaleKeys.openPdf: '打开 PDF',
+    LocaleKeys.done: '完成',
+    LocaleKeys.pdfMeta: '@size · @pages 页',
+    LocaleKeys.savedLocallyHint: '已保存在应用存储中。卸载或清除数据后会删除。',
+    LocaleKeys.sharePdfText: '正在分享 @name',
+    LocaleKeys.fileMissing: '找不到文件',
+    LocaleKeys.openPdfFailed: '无法打开 PDF',
 };
 
   static const Map<String, String> _hi = {
@@ -290,6 +316,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'रद्द',
     LocaleKeys.save: 'सहेजें',
     LocaleKeys.addMore: 'और जोड़ें',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _es = {
@@ -377,6 +416,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancelar',
     LocaleKeys.save: 'Guardar',
     LocaleKeys.addMore: 'Añadir más',
+    LocaleKeys.convertingPdf: 'Convirtiendo a PDF',
+    LocaleKeys.conversionProgress: 'Convertidas @done de @total imágenes',
+    LocaleKeys.pleaseWait: 'Espera. No cierres la app.',
+    LocaleKeys.conversionFailed: 'La conversión falló. Inténtalo de nuevo.',
+    LocaleKeys.sharePdf: 'Compartir',
+    LocaleKeys.savePdf: 'Guardar',
+    LocaleKeys.openPdf: 'Abrir PDF',
+    LocaleKeys.done: 'Listo',
+    LocaleKeys.pdfMeta: '@size · @pages páginas',
+    LocaleKeys.savedLocallyHint: 'Guardado en el almacenamiento de la app. Se borra al desinstalar o borrar datos.',
+    LocaleKeys.sharePdfText: 'Compartiendo @name',
+    LocaleKeys.fileMissing: 'Archivo no encontrado',
+    LocaleKeys.openPdfFailed: 'No se pudo abrir el PDF',
 };
 
   static const Map<String, String> _fr = {
@@ -464,6 +516,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Annuler',
     LocaleKeys.save: 'Enregistrer',
     LocaleKeys.addMore: 'Ajouter',
+    LocaleKeys.convertingPdf: 'Conversion en PDF',
+    LocaleKeys.conversionProgress: '@done sur @total images converties',
+    LocaleKeys.pleaseWait: 'Veuillez patienter. Ne fermez pas l\'application.',
+    LocaleKeys.conversionFailed: 'Échec de la conversion. Réessayez.',
+    LocaleKeys.sharePdf: 'Partager',
+    LocaleKeys.savePdf: 'Enregistrer',
+    LocaleKeys.openPdf: 'Ouvrir le PDF',
+    LocaleKeys.done: 'Terminé',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Enregistré dans le stockage de l\'app. Effacé si vous désinstallez ou effacez les données.',
+    LocaleKeys.sharePdfText: 'Partage de @name',
+    LocaleKeys.fileMissing: 'Fichier introuvable',
+    LocaleKeys.openPdfFailed: 'Impossible d\'ouvrir le PDF',
 };
 
   static const Map<String, String> _ar = {
@@ -551,6 +616,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'إلغاء',
     LocaleKeys.save: 'حفظ',
     LocaleKeys.addMore: 'إضافة المزيد',
+    LocaleKeys.convertingPdf: 'جاري التحويل إلى PDF',
+    LocaleKeys.conversionProgress: 'تم تحويل @done من @total صورة',
+    LocaleKeys.pleaseWait: 'يرجى الانتظار. لا تغلق التطبيق.',
+    LocaleKeys.conversionFailed: 'فشل التحويل. حاول مرة أخرى.',
+    LocaleKeys.sharePdf: 'مشاركة',
+    LocaleKeys.savePdf: 'حفظ',
+    LocaleKeys.openPdf: 'فتح PDF',
+    LocaleKeys.done: 'تم',
+    LocaleKeys.pdfMeta: '@size · @pages صفحات',
+    LocaleKeys.savedLocallyHint: 'محفوظ في تخزين التطبيق. يُحذف عند إلغاء التثبيت أو مسح البيانات.',
+    LocaleKeys.sharePdfText: 'مشاركة @name',
+    LocaleKeys.fileMissing: 'الملف غير موجود',
+    LocaleKeys.openPdfFailed: 'تعذر فتح PDF',
 };
 
   static const Map<String, String> _bn = {
@@ -638,6 +716,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'আরও যোগ',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _pt = {
@@ -725,6 +816,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancelar',
     LocaleKeys.save: 'Salvar',
     LocaleKeys.addMore: 'Adicionar mais',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _ru = {
@@ -812,6 +916,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Отмена',
     LocaleKeys.save: 'Сохранить',
     LocaleKeys.addMore: 'Добавить ещё',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _ur = {
@@ -899,6 +1016,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'مزید شامل کریں',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _id = {
@@ -986,6 +1116,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Tambah lagi',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _de = {
@@ -1073,6 +1216,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Abbrechen',
     LocaleKeys.save: 'Speichern',
     LocaleKeys.addMore: 'Mehr hinzufügen',
+    LocaleKeys.convertingPdf: 'Wird in PDF umgewandelt',
+    LocaleKeys.conversionProgress: '@done von @total Bildern konvertiert',
+    LocaleKeys.pleaseWait: 'Bitte warten. App nicht schließen.',
+    LocaleKeys.conversionFailed: 'Konvertierung fehlgeschlagen. Bitte erneut versuchen.',
+    LocaleKeys.sharePdf: 'Teilen',
+    LocaleKeys.savePdf: 'Speichern',
+    LocaleKeys.openPdf: 'PDF öffnen',
+    LocaleKeys.done: 'Fertig',
+    LocaleKeys.pdfMeta: '@size · @pages Seiten',
+    LocaleKeys.savedLocallyHint: 'Im App-Speicher gespeichert. Wird bei Deinstallation oder Datenlöschen entfernt.',
+    LocaleKeys.sharePdfText: '@name wird geteilt',
+    LocaleKeys.fileMissing: 'Datei nicht gefunden',
+    LocaleKeys.openPdfFailed: 'PDF konnte nicht geöffnet werden',
 };
 
   static const Map<String, String> _ja = {
@@ -1160,6 +1316,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'キャンセル',
     LocaleKeys.save: '保存',
     LocaleKeys.addMore: '追加',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _sw = {
@@ -1247,6 +1416,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Ongeza zaidi',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _tr = {
@@ -1334,6 +1516,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'İptal',
     LocaleKeys.save: 'Kaydet',
     LocaleKeys.addMore: 'Daha fazla',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _ko = {
@@ -1421,6 +1616,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: '취소',
     LocaleKeys.save: '저장',
     LocaleKeys.addMore: '더 추가',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _vi = {
@@ -1508,6 +1716,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Thêm nữa',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _it = {
@@ -1595,6 +1816,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Annulla',
     LocaleKeys.save: 'Salva',
     LocaleKeys.addMore: 'Aggiungi',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _th = {
@@ -1682,6 +1916,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'เพิ่มอีก',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _pl = {
@@ -1769,6 +2016,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Dodaj więcej',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _nl = {
@@ -1856,6 +2116,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Meer toevoegen',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _ms = {
@@ -1943,6 +2216,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Tambah lagi',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _fa = {
@@ -2030,6 +2316,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'افزودن بیشتر',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
   static const Map<String, String> _uk = {
@@ -2117,6 +2416,19 @@ class AppTranslations extends Translations {
     LocaleKeys.cancel: 'Cancel',
     LocaleKeys.save: 'Save',
     LocaleKeys.addMore: 'Додати ще',
+    LocaleKeys.convertingPdf: 'Converting to PDF',
+    LocaleKeys.conversionProgress: 'Converted @done of @total images',
+    LocaleKeys.pleaseWait: 'Please wait. Do not close the app.',
+    LocaleKeys.conversionFailed: 'Conversion failed. Please try again.',
+    LocaleKeys.sharePdf: 'Share',
+    LocaleKeys.savePdf: 'Save',
+    LocaleKeys.openPdf: 'Open PDF',
+    LocaleKeys.done: 'Done',
+    LocaleKeys.pdfMeta: '@size · @pages pages',
+    LocaleKeys.savedLocallyHint: 'Saved in app storage. Cleared if you uninstall or clear app data.',
+    LocaleKeys.sharePdfText: 'Sharing @name',
+    LocaleKeys.fileMissing: 'File not found',
+    LocaleKeys.openPdfFailed: 'Could not open PDF',
 };
 
 }

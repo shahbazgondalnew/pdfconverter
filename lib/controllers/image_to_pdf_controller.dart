@@ -154,11 +154,12 @@ class ImageToPdfController extends GetxController {
       return;
     }
 
-    Get.snackbar(
-      LocaleKeys.toolImageToPdf.tr,
-      LocaleKeys.pdfReadySoon.tr,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(12),
+    Get.toNamed(
+      AppRoutes.pdfProgress,
+      arguments: {
+        'images': images.toList(),
+        'settings': settings.value,
+      },
     );
   }
 }
