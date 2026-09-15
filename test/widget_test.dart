@@ -32,10 +32,13 @@ void main() {
     expect(find.text('Convert from PDF'), findsOneWidget);
     expect(find.text('Organize PDF'), findsOneWidget);
     expect(find.text('Image tools'), findsOneWidget);
+    expect(find.text('Protect & edit'), findsOneWidget);
     expect(find.text('Image to PDF'), findsOneWidget);
     expect(find.text('PDF to Image'), findsOneWidget);
     expect(find.text('Merge PDF'), findsOneWidget);
     expect(find.text('PNG to JPG'), findsOneWidget);
+    expect(find.text('Scan to PDF'), findsOneWidget);
+    expect(find.text('Lock PDF'), findsOneWidget);
   });
 
   testWidgets('Bottom navigation switches tabs', (WidgetTester tester) async {

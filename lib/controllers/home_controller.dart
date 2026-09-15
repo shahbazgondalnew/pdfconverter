@@ -33,6 +33,24 @@ class HomeController extends GetxController {
           icon: Icons.notes_outlined,
           color: Color(0xFF8E24AA),
         ),
+        ToolItem(
+          id: ToolId.pptToPdf,
+          titleKey: LocaleKeys.toolPptToPdf,
+          icon: Icons.slideshow_outlined,
+          color: Color(0xFFE64A19),
+        ),
+        ToolItem(
+          id: ToolId.htmlToPdf,
+          titleKey: LocaleKeys.toolHtmlToPdf,
+          icon: Icons.code,
+          color: Color(0xFF00838F),
+        ),
+        ToolItem(
+          id: ToolId.scanToPdf,
+          titleKey: LocaleKeys.toolScanToPdf,
+          icon: Icons.document_scanner_outlined,
+          color: Color(0xFF6A1B9A),
+        ),
       ],
     ),
     ToolSection(
@@ -55,6 +73,24 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolPdfToText,
           icon: Icons.text_snippet_outlined,
           color: Color(0xFF00897B),
+        ),
+        ToolItem(
+          id: ToolId.pdfToExcel,
+          titleKey: LocaleKeys.toolPdfToExcel,
+          icon: Icons.grid_on_outlined,
+          color: Color(0xFF2E7D32),
+        ),
+        ToolItem(
+          id: ToolId.pdfToPpt,
+          titleKey: LocaleKeys.toolPdfToPpt,
+          icon: Icons.present_to_all_outlined,
+          color: Color(0xFFD84315),
+        ),
+        ToolItem(
+          id: ToolId.pdfToHtml,
+          titleKey: LocaleKeys.toolPdfToHtml,
+          icon: Icons.language,
+          color: Color(0xFF0277BD),
         ),
       ],
     ),
@@ -85,6 +121,36 @@ class HomeController extends GetxController {
           icon: Icons.rotate_right,
           color: Color(0xFF6D4C41),
         ),
+        ToolItem(
+          id: ToolId.reorderPages,
+          titleKey: LocaleKeys.toolReorderPages,
+          icon: Icons.swap_vert,
+          color: Color(0xFFAD1457),
+        ),
+        ToolItem(
+          id: ToolId.deletePages,
+          titleKey: LocaleKeys.toolDeletePages,
+          icon: Icons.delete_outline,
+          color: Color(0xFFC62828),
+        ),
+        ToolItem(
+          id: ToolId.extractPages,
+          titleKey: LocaleKeys.toolExtractPages,
+          icon: Icons.content_cut,
+          color: Color(0xFF4527A0),
+        ),
+        ToolItem(
+          id: ToolId.pageNumbers,
+          titleKey: LocaleKeys.toolPageNumbers,
+          icon: Icons.format_list_numbered,
+          color: Color(0xFF1565C0),
+        ),
+        ToolItem(
+          id: ToolId.watermark,
+          titleKey: LocaleKeys.toolWatermark,
+          icon: Icons.branding_watermark_outlined,
+          color: Color(0xFF455A64),
+        ),
       ],
     ),
     ToolSection(
@@ -99,7 +165,7 @@ class HomeController extends GetxController {
         ToolItem(
           id: ToolId.jpgToPng,
           titleKey: LocaleKeys.toolJpgToPng,
-          icon: Icons.swap_vert,
+          icon: Icons.image_aspect_ratio,
           color: Color(0xFF7CB342),
         ),
         ToolItem(
@@ -107,6 +173,47 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolWebpToPng,
           icon: Icons.transform,
           color: Color(0xFF546E7A),
+        ),
+        ToolItem(
+          id: ToolId.heicToJpg,
+          titleKey: LocaleKeys.toolHeicToJpg,
+          icon: Icons.photo_camera_back_outlined,
+          color: Color(0xFFEF6C00),
+        ),
+        ToolItem(
+          id: ToolId.compressImage,
+          titleKey: LocaleKeys.toolCompressImage,
+          icon: Icons.photo_size_select_large,
+          color: Color(0xFF009688),
+        ),
+        ToolItem(
+          id: ToolId.cropImage,
+          titleKey: LocaleKeys.toolCropImage,
+          icon: Icons.crop,
+          color: Color(0xFF7B1FA2),
+        ),
+      ],
+    ),
+    ToolSection(
+      titleKey: LocaleKeys.sectionProtectPdf,
+      tools: [
+        ToolItem(
+          id: ToolId.lockPdf,
+          titleKey: LocaleKeys.toolLockPdf,
+          icon: Icons.lock_outline,
+          color: Color(0xFFC62828),
+        ),
+        ToolItem(
+          id: ToolId.unlockPdf,
+          titleKey: LocaleKeys.toolUnlockPdf,
+          icon: Icons.lock_open,
+          color: Color(0xFF2E7D32),
+        ),
+        ToolItem(
+          id: ToolId.signPdf,
+          titleKey: LocaleKeys.toolSignPdf,
+          icon: Icons.draw_outlined,
+          color: Color(0xFF283593),
         ),
       ],
     ),
