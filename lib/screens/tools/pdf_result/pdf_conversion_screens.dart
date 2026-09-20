@@ -9,6 +9,7 @@ import '../../../controllers/pdf_conversion_controller.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../models/conversion_record.dart';
 import '../../../routes/app_routes.dart';
+import '../../../services/conversion_storage.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_background.dart';
 
@@ -79,7 +80,7 @@ class PdfProgressScreen extends GetView<PdfProgressController> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      LocaleKeys.conversionProgress.trParams({
+                      controller.progressLabel.value.trParams({
                         'done': '${controller.completed.value}',
                         'total': '${controller.total.value}',
                       }),
@@ -128,7 +129,8 @@ class PdfResultScreen extends GetView<PdfResultController> {
   const PdfResultScreen({super.key});
 
   Future<void> _share(ConversionRecord record) async {
-    final file = File(record.path);
+    final absolutePath = ConversionStorage.resolvePath(record.path);
+    final file = File(absolutePath);
     if (!await file.exists()) {
       Get.snackbar(
         LocaleKeys.toolImageToPdf.tr,
@@ -140,7 +142,7 @@ class PdfResultScreen extends GetView<PdfResultController> {
     }
 
     await Share.shareXFiles(
-      [XFile(record.path, mimeType: 'application/pdf', name: record.name)],
+      [XFile(absolutePath, mimeType: 'application/pdf', name: record.name)],
       subject: record.name,
       text: LocaleKeys.sharePdfText.trParams({'name': record.name}),
     );
@@ -153,7 +155,19 @@ class PdfResultScreen extends GetView<PdfResultController> {
   }
 
   Future<void> _open(ConversionRecord record) async {
-    final result = await OpenFilex.open(record.path);
+    final absolutePath = ConversionStorage.resolvePath(record.path);
+    final file = File(absolutePath);
+    if (!await file.exists()) {
+      Get.snackbar(
+        LocaleKeys.toolImageToPdf.tr,
+        LocaleKeys.fileMissing.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+      );
+      return;
+    }
+
+    final result = await OpenFilex.open(absolutePath);
     if (result.type != ResultType.done) {
       Get.snackbar(
         LocaleKeys.toolImageToPdf.tr,

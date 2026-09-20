@@ -157,6 +157,7 @@ class ImageToPdfController extends GetxController {
     Get.toNamed(
       AppRoutes.pdfProgress,
       arguments: {
+        'type': 'image_to_pdf',
         'images': images.toList(),
         'settings': settings.value,
       },

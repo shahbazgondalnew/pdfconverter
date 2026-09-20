@@ -1,0 +1,330 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:archive/archive.dart';
+import 'package:path/path.dart' as p;
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:xml/xml.dart';
+
+import '../models/conversion_record.dart';
+import '../models/document_models.dart';
+import '../models/image_to_pdf_models.dart';
+import 'conversion_storage.dart';
+import 'image_to_pdf_service.dart';
+
+class WordToPdfService {
+  const WordToPdfService();
+
+  /// Parses a Word/text file into editable logical pages.
+  static Future<List<WordPage>> parsePages({
+    required String path,
+    required String documentId,
+  }) async {
+    final ext = p.extension(path).toLowerCase();
+    final segments = await _extractPageSegments(path, ext);
+    final pages = <WordPage>[];
+    for (var i = 0; i < segments.length; i++) {
+      pages.add(
+        WordPage(
+          id: '$documentId-p$i',
+          index: i,
+          paragraphs: segments[i],
+        ),
+      );
+    }
+    return pages;
+  }
+
+  Future<ConversionRecord> convert({
+    required List<SelectedDocument> documents,
+    required PdfPageSettings settings,
+    ConversionProgressCallback? onProgress,
+  }) async {
+    if (documents.isEmpty) {
+      throw StateError('No Word documents to convert');
+    }
+
+    final workItems = <({SelectedDocument doc, WordPage page})>[];
+    for (final doc in documents) {
+      if (doc.pages.isEmpty) continue;
+      for (final page in doc.pages) {
+        workItems.add((doc: doc, page: page));
+      }
+    }
+    if (workItems.isEmpty) {
+      throw StateError('No Word pages to convert');
+    }
+
+    final pdf = pw.Document();
+    final total = workItems.length;
+    final bg = settings.backgroundColor;
+    final pdfBg = PdfColor(bg.r, bg.g, bg.b, bg.a);
+    final textColor = settings.contrastingTextColor;
+    final pdfText = PdfColor(textColor.r, textColor.g, textColor.b, textColor.a);
+    final layout = _layoutFor(settings.fitMode);
+    final mutedText = PdfColor(
+      pdfText.red,
+      pdfText.green,
+      pdfText.blue,
+      0.55,
+    );
+
+    for (var i = 0; i < workItems.length; i++) {
+      final item = workItems[i];
+      final paragraphs = item.page.paragraphs;
+
+      pdf.addPage(
+        pw.MultiPage(
+          pageTheme: pw.PageTheme(
+            pageFormat: PdfPageFormat.a4,
+            margin: layout.margin,
+            buildBackground: (context) => pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Container(color: pdfBg),
+            ),
+          ),
+          maxPages: 40,
+          header: (context) => pw.Padding(
+            padding: const pw.EdgeInsets.only(bottom: 12),
+            child: pw.Text(
+              item.doc.name,
+              style: pw.TextStyle(
+                fontSize: 10,
+                color: mutedText,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ),
+          build: (context) {
+            if (paragraphs.isEmpty) {
+              return [
+                pw.Text(
+                  '(Empty page)',
+                  textAlign: layout.align,
+                  style: pw.TextStyle(
+                    fontSize: layout.fontSize,
+                    color: mutedText,
+                  ),
+                ),
+              ];
+            }
+            return [
+              for (final line in paragraphs)
+                pw.Padding(
+                  padding: pw.EdgeInsets.only(bottom: layout.paragraphGap),
+                  child: pw.Text(
+                    line,
+                    textAlign: layout.align,
+                    style: pw.TextStyle(
+                      fontSize: layout.fontSize,
+                      lineSpacing: layout.lineSpacing,
+                      color: pdfText,
+                    ),
+                  ),
+                ),
+            ];
+          },
+        ),
+      );
+
+      onProgress?.call(i + 1, total);
+      await Future<void>.delayed(const Duration(milliseconds: 16));
+    }
+
+    final stamp = DateTime.now();
+    final fileName =
+        'WORD_PDF_${stamp.year}${_two(stamp.month)}${_two(stamp.day)}_${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}.pdf';
+    final output = await ConversionStorage.createOutputFile(fileName);
+    await output.writeAsBytes(await pdf.save(), flush: true);
+
+    final record = ConversionRecord(
+      id: stamp.microsecondsSinceEpoch.toString(),
+      name: p.basename(output.path),
+      path: output.path,
+      sizeBytes: await output.length(),
+      conversionType: ConversionType.wordToPdf,
+      createdAt: stamp,
+      pageCount: pdf.document.pdfPageList.pages.length,
+    );
+    return ConversionStorage.saveRecord(record);
+  }
+
+  static _WordLayout _layoutFor(ImageFitMode mode) {
+    switch (mode) {
+      case ImageFitMode.center:
+        return const _WordLayout(
+          margin: pw.EdgeInsets.all(56),
+          fontSize: 11,
+          lineSpacing: 1.5,
+          paragraphGap: 10,
+          align: pw.TextAlign.center,
+        );
+      case ImageFitMode.contain:
+        return const _WordLayout(
+          margin: pw.EdgeInsets.all(40),
+          fontSize: 12,
+          lineSpacing: 1.4,
+          paragraphGap: 8,
+          align: pw.TextAlign.left,
+        );
+      case ImageFitMode.cover:
+        return const _WordLayout(
+          margin: pw.EdgeInsets.all(20),
+          fontSize: 13,
+          lineSpacing: 1.35,
+          paragraphGap: 6,
+          align: pw.TextAlign.left,
+        );
+      case ImageFitMode.fill:
+        return const _WordLayout(
+          margin: pw.EdgeInsets.all(12),
+          fontSize: 11,
+          lineSpacing: 1.25,
+          paragraphGap: 4,
+          align: pw.TextAlign.justify,
+        );
+      case ImageFitMode.fitWidth:
+        return const _WordLayout(
+          margin: pw.EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+          fontSize: 13,
+          lineSpacing: 1.4,
+          paragraphGap: 8,
+          align: pw.TextAlign.left,
+        );
+      case ImageFitMode.fitHeight:
+        return const _WordLayout(
+          margin: pw.EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          fontSize: 14,
+          lineSpacing: 1.55,
+          paragraphGap: 10,
+          align: pw.TextAlign.left,
+        );
+    }
+  }
+
+  static Future<List<List<String>>> _extractPageSegments(
+    String path,
+    String ext,
+  ) async {
+    if (ext == '.docx') {
+      return _extractDocxSegments(path);
+    }
+    if (ext == '.txt' || ext == '.rtf') {
+      final text = await File(path).readAsString();
+      final paragraphs = text
+          .split(RegExp(r'\r?\n'))
+          .map((line) => line.trim())
+          .where((line) => line.isNotEmpty)
+          .toList();
+      return _chunkParagraphs(paragraphs);
+    }
+    return [
+      [
+        'This file format ($ext) has limited support.',
+        'Please use a .docx Word file for best results.',
+        'File: ${p.basename(path)}',
+      ],
+    ];
+  }
+
+  static Future<List<List<String>>> _extractDocxSegments(String path) async {
+    final bytes = await File(path).readAsBytes();
+    final archive = ZipDecoder().decodeBytes(bytes);
+    final documentFile = archive.findFile('word/document.xml');
+    if (documentFile == null) {
+      throw StateError('Invalid Word document');
+    }
+
+    final xmlContent = utf8.decode(documentFile.content as List<int>);
+    final xmlDoc = XmlDocument.parse(xmlContent);
+    final pages = <List<String>>[];
+    var current = <String>[];
+
+    for (final paragraph in xmlDoc.findAllElements('w:p')) {
+      final buffer = StringBuffer();
+      for (final textNode in paragraph.findAllElements('w:t')) {
+        buffer.write(textNode.innerText);
+      }
+      final line = buffer.toString().trim();
+      if (line.isNotEmpty) {
+        current.add(line);
+      }
+
+      final hasPageBreak = paragraph.findAllElements('w:br').any((br) {
+            final type = br.getAttribute('w:type');
+            return type == 'page';
+          }) ||
+          paragraph.findAllElements('w:lastRenderedPageBreak').isNotEmpty;
+
+      if (hasPageBreak && current.isNotEmpty) {
+        pages.add(current);
+        current = <String>[];
+      }
+    }
+
+    if (current.isNotEmpty) {
+      pages.add(current);
+    }
+
+    if (pages.isEmpty) {
+      return [
+        ['(Empty document)'],
+      ];
+    }
+
+    // If the document has no explicit page breaks, chunk into manageable pages.
+    if (pages.length == 1 && pages.first.length > 28) {
+      return _chunkParagraphs(pages.first);
+    }
+    return pages;
+  }
+
+  static List<List<String>> _chunkParagraphs(List<String> paragraphs) {
+    if (paragraphs.isEmpty) {
+      return [
+        ['(Empty document)'],
+      ];
+    }
+
+    const maxParagraphs = 28;
+    const maxChars = 2200;
+    final pages = <List<String>>[];
+    var current = <String>[];
+    var chars = 0;
+
+    for (final line in paragraphs) {
+      final nextChars = chars + line.length;
+      if (current.isNotEmpty &&
+          (current.length >= maxParagraphs || nextChars > maxChars)) {
+        pages.add(current);
+        current = <String>[];
+        chars = 0;
+      }
+      current.add(line);
+      chars += line.length;
+    }
+    if (current.isNotEmpty) {
+      pages.add(current);
+    }
+    return pages;
+  }
+
+  String _two(int value) => value.toString().padLeft(2, '0');
+}
+
+class _WordLayout {
+  const _WordLayout({
+    required this.margin,
+    required this.fontSize,
+    required this.lineSpacing,
+    required this.paragraphGap,
+    required this.align,
+  });
+
+  final pw.EdgeInsets margin;
+  final double fontSize;
+  final double lineSpacing;
+  final double paragraphGap;
+  final pw.TextAlign align;
+}

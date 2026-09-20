@@ -1,5 +1,7 @@
 enum ConversionType {
-  imageToPdf('image_to_pdf');
+  imageToPdf('image_to_pdf'),
+  wordToPdf('word_to_pdf'),
+  excelToPdf('excel_to_pdf');
 
   const ConversionType(this.storageValue);
   final String storageValue;
@@ -63,5 +65,25 @@ class ConversionRecord {
     if (kb < 1024) return '${kb.toStringAsFixed(1)} KB';
     final mb = kb / 1024;
     return '${mb.toStringAsFixed(2)} MB';
+  }
+
+  ConversionRecord copyWith({
+    String? id,
+    String? name,
+    String? path,
+    int? sizeBytes,
+    ConversionType? conversionType,
+    DateTime? createdAt,
+    int? pageCount,
+  }) {
+    return ConversionRecord(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      path: path ?? this.path,
+      sizeBytes: sizeBytes ?? this.sizeBytes,
+      conversionType: conversionType ?? this.conversionType,
+      createdAt: createdAt ?? this.createdAt,
+      pageCount: pageCount ?? this.pageCount,
+    );
   }
 }

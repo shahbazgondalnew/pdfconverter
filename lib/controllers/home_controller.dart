@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/excel_to_pdf_controller.dart';
+import '../controllers/image_to_pdf_controller.dart';
+import '../controllers/word_to_pdf_controller.dart';
 import '../localization/locale_keys.dart';
 import '../models/tool_models.dart';
-import '../controllers/image_to_pdf_controller.dart';
 
 class HomeController extends GetxController {
   final sections = const <ToolSection>[
@@ -221,17 +223,24 @@ class HomeController extends GetxController {
   ];
 
   void onToolTap(ToolItem tool) {
-    if (tool.id == ToolId.imageToPdf) {
-      ImageToPdfController.startFromHome();
-      return;
+    switch (tool.id) {
+      case ToolId.imageToPdf:
+        ImageToPdfController.startFromHome();
+        return;
+      case ToolId.wordToPdf:
+        WordToPdfController.startFromHome();
+        return;
+      case ToolId.excelToPdf:
+        ExcelToPdfController.startFromHome();
+        return;
+      default:
+        Get.snackbar(
+          tool.titleKey.tr,
+          LocaleKeys.toolComingSoon.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+          duration: const Duration(seconds: 2),
+        );
     }
-
-    Get.snackbar(
-      tool.titleKey.tr,
-      LocaleKeys.toolComingSoon.tr,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: const EdgeInsets.all(12),
-      duration: const Duration(seconds: 2),
-    );
   }
 }

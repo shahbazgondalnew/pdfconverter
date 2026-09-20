@@ -64,6 +64,13 @@ class PdfPageSettings {
     }
   }
 
+  /// Readable text color against [backgroundColor].
+  Color get contrastingTextColor {
+    return backgroundColor.computeLuminance() < 0.45
+        ? Colors.white
+        : const Color(0xFF1A1A1A);
+  }
+
   BoxFit get boxFit {
     switch (fitMode) {
       case ImageFitMode.center:

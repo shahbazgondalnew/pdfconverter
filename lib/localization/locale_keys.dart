@@ -104,4 +104,23 @@ abstract final class LocaleKeys {
   static const sharePdfText = 'share_pdf_text';
   static const fileMissing = 'file_missing';
   static const openPdfFailed = 'open_pdf_failed';
+
+  // Document tools (Word / Excel)
+  static const addWordFiles = 'add_word_files';
+  static const selectedWordFiles = 'selected_word_files';
+  static const noWordSelected = 'no_word_selected';
+  static const pickWordFailed = 'pick_word_failed';
+  static const editWordPages = 'edit_word_pages';
+  static const editWordPagesHint = 'edit_word_pages_hint';
+  static const removePage = 'remove_page';
+  static const wordPages = 'word_pages';
+  static const pageLabel = 'page_label';
+  static const noPagesLeft = 'no_pages_left';
+  static const wordBackgroundHint = 'word_background_hint';
+  static const conversionProgressPages = 'conversion_progress_pages';
+  static const addExcelFiles = 'add_excel_files';
+  static const selectedExcelFiles = 'selected_excel_files';
+  static const noExcelSelected = 'no_excel_selected';
+  static const pickExcelFailed = 'pick_excel_failed';
+  static const conversionProgressFiles = 'conversion_progress_files';
 }

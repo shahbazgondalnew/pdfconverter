@@ -8,6 +8,10 @@ import '../models/conversion_record.dart';
 
 /// App-private storage for converted files + Hive metadata.
 /// Cleared when the app is uninstalled or app data is cleared.
+///
+/// Paths are stored as **filenames only** (relative to [filesDirectory]).
+/// Absolute iOS container paths change between runs/rebuilds, so they must
+/// never be persisted.
 class ConversionStorage {
   ConversionStorage._();
 
@@ -33,6 +37,7 @@ class ConversionStorage {
     }
 
     _box = await Hive.openBox(_boxName);
+    await _migrateAbsolutePaths();
   }
 
   static Directory get filesDirectory {
@@ -46,6 +51,24 @@ class ConversionStorage {
     }
   }
 
+  /// Portable path for Hive — filename only under [filesDirectory].
+  static String toStoredPath(String absoluteOrRelativePath) {
+    return p.basename(absoluteOrRelativePath);
+  }
+
+  /// Resolves a stored (or legacy absolute) path against the current
+  /// documents container. Fixes iOS UUID path changes across runs.
+  static File resolveFile(String storedPath) {
+    _ensureReady();
+    final fileName = p.basename(storedPath);
+    return File(p.join(_filesDir!.path, fileName));
+  }
+
+  /// Absolute path for open/share APIs.
+  static String resolvePath(String storedPath) {
+    return resolveFile(storedPath).path;
+  }
+
   static Future<File> createOutputFile(String fileName) async {
     _ensureReady();
     final safeName = fileName.replaceAll(RegExp(r'[^\w\-. ]'), '_');
@@ -55,8 +78,9 @@ class ConversionStorage {
 
   static Future<ConversionRecord> saveRecord(ConversionRecord record) async {
     _ensureReady();
-    await _box!.put(record.id, record.toMap());
-    return record;
+    final portable = record.copyWith(path: toStoredPath(record.path));
+    await _box!.put(portable.id, portable.toMap());
+    return portable;
   }
 
   static List<ConversionRecord> getAllRecords() {
@@ -64,6 +88,9 @@ class ConversionStorage {
     final records = _box!.values
         .whereType<Map>()
         .map((map) => ConversionRecord.fromMap(map))
+        .map(
+          (record) => record.copyWith(path: toStoredPath(record.path)),
+        )
         .toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return records;
@@ -74,7 +101,7 @@ class ConversionStorage {
     final raw = _box!.get(id);
     if (raw is Map) {
       final record = ConversionRecord.fromMap(raw);
-      final file = File(record.path);
+      final file = resolveFile(record.path);
       if (await file.exists()) {
         await file.delete();
       }
@@ -85,11 +112,27 @@ class ConversionStorage {
   static Future<void> clearAll() async {
     _ensureReady();
     for (final record in getAllRecords()) {
-      final file = File(record.path);
+      final file = resolveFile(record.path);
       if (await file.exists()) {
         await file.delete();
       }
     }
     await _box!.clear();
+  }
+
+  /// Rewrite any Hive entries that still store absolute container paths.
+  static Future<void> _migrateAbsolutePaths() async {
+    if (_box == null) return;
+    for (final key in _box!.keys.toList()) {
+      final raw = _box!.get(key);
+      if (raw is! Map) continue;
+      final path = raw['path'] as String?;
+      if (path == null || path.isEmpty) continue;
+      if (!p.isAbsolute(path)) continue;
+
+      final updated = Map<dynamic, dynamic>.from(raw);
+      updated['path'] = toStoredPath(path);
+      await _box!.put(key, updated);
+    }
   }
 }

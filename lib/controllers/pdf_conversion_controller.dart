@@ -2,9 +2,12 @@ import 'package:get/get.dart';
 
 import '../localization/locale_keys.dart';
 import '../models/conversion_record.dart';
+import '../models/document_models.dart';
 import '../models/image_to_pdf_models.dart';
 import '../routes/app_routes.dart';
+import '../services/excel_to_pdf_service.dart';
 import '../services/image_to_pdf_service.dart';
+import '../services/word_to_pdf_service.dart';
 import 'history_controller.dart';
 
 class PdfProgressController extends GetxController {
@@ -12,10 +15,7 @@ class PdfProgressController extends GetxController {
   final completed = 0.obs;
   final isWorking = true.obs;
   final errorMessage = RxnString();
-
-  late final List<SelectedImage> _images;
-  late final PdfPageSettings _settings;
-  final _service = const ImageToPdfService();
+  final progressLabel = LocaleKeys.conversionProgress.obs;
 
   double get progress {
     if (total.value == 0) return 0;
@@ -32,22 +32,61 @@ class PdfProgressController extends GetxController {
       return;
     }
 
-    _images = List<SelectedImage>.from(args['images'] as List);
-    _settings = args['settings'] as PdfPageSettings;
-    total.value = _images.length;
-    _start();
+    final type = args['type'] as String? ?? 'image_to_pdf';
+    _start(type, args);
   }
 
-  Future<void> _start() async {
+  Future<void> _start(String type, Map args) async {
     try {
-      final record = await _service.convert(
-        images: _images,
-        settings: _settings,
-        onProgress: (done, all) {
-          completed.value = done;
-          total.value = all;
-        },
-      );
+      late final ConversionRecord record;
+
+      switch (type) {
+        case 'word_to_pdf':
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          final documents =
+              List<SelectedDocument>.from(args['documents'] as List);
+          final settings = args['settings'] as PdfPageSettings? ??
+              PdfPageSettings();
+          final pageTotal = documents.fold<int>(
+            0,
+            (sum, doc) => sum + doc.pageCount,
+          );
+          total.value = pageTotal > 0 ? pageTotal : documents.length;
+          record = await const WordToPdfService().convert(
+            documents: documents,
+            settings: settings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+        case 'excel_to_pdf':
+          progressLabel.value = LocaleKeys.conversionProgressFiles;
+          final documents =
+              List<SelectedDocument>.from(args['documents'] as List);
+          total.value = documents.length;
+          record = await const ExcelToPdfService().convert(
+            documents: documents,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+        case 'image_to_pdf':
+        default:
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final images = List<SelectedImage>.from(args['images'] as List);
+          final settings = args['settings'] as PdfPageSettings;
+          total.value = images.length;
+          record = await const ImageToPdfService().convert(
+            images: images,
+            settings: settings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+      }
 
       if (Get.isRegistered<HistoryController>()) {
         Get.find<HistoryController>().reload();

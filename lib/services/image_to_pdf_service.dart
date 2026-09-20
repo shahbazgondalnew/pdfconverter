@@ -97,8 +97,7 @@ class ImageToPdfService {
       pageCount: total,
     );
 
-    await ConversionStorage.saveRecord(record);
-    return record;
+    return ConversionStorage.saveRecord(record);
   }
 
   pw.Widget _buildFittedImage(

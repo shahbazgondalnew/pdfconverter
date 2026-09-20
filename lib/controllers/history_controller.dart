@@ -35,7 +35,8 @@ class HistoryController extends GetxController {
   }
 
   Future<void> shareRecord(ConversionRecord record) async {
-    final file = File(record.path);
+    final absolutePath = ConversionStorage.resolvePath(record.path);
+    final file = File(absolutePath);
     if (!await file.exists()) {
       Get.snackbar(
         LocaleKeys.historyTitle.tr,
@@ -48,13 +49,26 @@ class HistoryController extends GetxController {
     }
 
     await Share.shareXFiles(
-      [XFile(record.path, mimeType: 'application/pdf', name: record.name)],
+      [XFile(absolutePath, mimeType: 'application/pdf', name: record.name)],
       subject: record.name,
     );
   }
 
   Future<void> openRecord(ConversionRecord record) async {
-    final result = await OpenFilex.open(record.path);
+    final absolutePath = ConversionStorage.resolvePath(record.path);
+    final file = File(absolutePath);
+    if (!await file.exists()) {
+      Get.snackbar(
+        LocaleKeys.historyTitle.tr,
+        LocaleKeys.fileMissing.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+      );
+      reload();
+      return;
+    }
+
+    final result = await OpenFilex.open(absolutePath);
     if (result.type != ResultType.done) {
       Get.snackbar(
         LocaleKeys.historyTitle.tr,

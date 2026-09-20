@@ -14,6 +14,10 @@ class HistoryScreen extends GetView<HistoryController> {
     switch (type) {
       case ConversionType.imageToPdf:
         return LocaleKeys.toolImageToPdf.tr;
+      case ConversionType.wordToPdf:
+        return LocaleKeys.toolWordToPdf.tr;
+      case ConversionType.excelToPdf:
+        return LocaleKeys.toolExcelToPdf.tr;
     }
   }
 
