@@ -115,18 +115,32 @@ class _CameraPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    final preview = controller.value.previewSize;
-    if (preview == null) {
+    if (!controller.value.isInitialized) {
+      return const ColoredBox(color: Colors.black);
+    }
+
+    final previewSize = controller.value.previewSize;
+    if (previewSize == null) {
       return CameraPreview(controller);
     }
 
-    // Camera preview is typically landscape; cover the screen.
-    final scale = size.aspectRatio * (preview.height / preview.width);
-    return ClipRect(
-      child: Transform.scale(
-        scale: scale < 1 ? 1 / scale : scale,
-        child: Center(child: CameraPreview(controller)),
+    // Sensor preview is landscape; swap for upright phone display.
+    final previewWidth = previewSize.height;
+    final previewHeight = previewSize.width;
+
+    return ColoredBox(
+      color: Colors.black,
+      child: SizedBox.expand(
+        child: FittedBox(
+          // Cover the screen without the old Transform.scale over-zoom.
+          fit: BoxFit.cover,
+          clipBehavior: Clip.hardEdge,
+          child: SizedBox(
+            width: previewWidth,
+            height: previewHeight,
+            child: CameraPreview(controller),
+          ),
+        ),
       ),
     );
   }

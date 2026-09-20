@@ -62,6 +62,14 @@ class ScanToPdfController extends GetxController {
       );
       await controller.initialize();
 
+      // Start at the widest available FOV (no digital zoom).
+      try {
+        final minZoom = await controller.getMinZoomLevel();
+        await controller.setZoomLevel(minZoom);
+      } catch (_) {
+        // Some devices don't support zoom APIs.
+      }
+
       // Dispose previous if any (hot restart / re-init).
       await cameraController?.dispose();
       cameraController = controller;
