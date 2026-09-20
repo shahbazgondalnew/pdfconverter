@@ -181,6 +181,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _zh = {
@@ -333,6 +342,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _hi = {
@@ -485,6 +503,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _es = {
@@ -637,6 +664,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _fr = {
@@ -789,6 +825,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _ar = {
@@ -941,6 +986,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _bn = {
@@ -1093,6 +1147,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _pt = {
@@ -1245,6 +1308,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _ru = {
@@ -1397,6 +1469,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _ur = {
@@ -1549,6 +1630,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _id = {
@@ -1701,6 +1791,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _de = {
@@ -1853,6 +1952,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _ja = {
@@ -2005,6 +2113,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _sw = {
@@ -2157,6 +2274,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _tr = {
@@ -2309,6 +2435,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _ko = {
@@ -2461,6 +2596,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _vi = {
@@ -2613,6 +2757,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _it = {
@@ -2765,6 +2918,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _th = {
@@ -2917,6 +3079,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _pl = {
@@ -3069,6 +3240,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _nl = {
@@ -3221,6 +3401,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _ms = {
@@ -3373,6 +3562,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _fa = {
@@ -3525,6 +3723,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
   static const Map<String, String> _uk = {
@@ -3677,6 +3884,15 @@ class AppTranslations extends Translations {
     LocaleKeys.cameraUnavailable: 'Camera is unavailable',
     LocaleKeys.captureFailed: 'Could not capture photo',
     LocaleKeys.retry: 'Retry',
+    LocaleKeys.addPptFiles: 'Add PowerPoint files',
+    LocaleKeys.selectedPptFiles: 'Selected PowerPoint files',
+    LocaleKeys.noPptSelected: 'No PowerPoint files selected yet',
+    LocaleKeys.pickPptFailed: 'Could not pick PowerPoint files',
+    LocaleKeys.editPptSlides: 'Edit slides',
+    LocaleKeys.editPptSlidesHint: 'Remove slides you do not want in the PDF',
+    LocaleKeys.pptSlides: '@count slides',
+    LocaleKeys.slideLabel: 'Slide @number',
+    LocaleKeys.pptBackgroundHint: 'Slide background for the PDF',
 };
 
 }

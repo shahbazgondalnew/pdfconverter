@@ -8,6 +8,7 @@ import '../routes/app_routes.dart';
 import '../services/excel_to_pdf_service.dart';
 import '../services/html_to_pdf_service.dart';
 import '../services/image_to_pdf_service.dart';
+import '../services/ppt_to_pdf_service.dart';
 import '../services/text_to_pdf_service.dart';
 import '../services/word_to_pdf_service.dart';
 import 'history_controller.dart';
@@ -114,6 +115,25 @@ class PdfProgressController extends GetxController {
           record = await const HtmlToPdfService().convert(
             documents: documents,
             settings: settings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+        case 'ppt_to_pdf':
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          final pptDocs =
+              List<SelectedDocument>.from(args['documents'] as List);
+          final pptSettings = args['settings'] as PdfPageSettings? ??
+              PdfPageSettings();
+          final pptTotal = pptDocs.fold<int>(
+            0,
+            (sum, doc) => sum + doc.pageCount,
+          );
+          total.value = pptTotal > 0 ? pptTotal : pptDocs.length;
+          record = await const PptToPdfService().convert(
+            documents: pptDocs,
+            settings: pptSettings,
             onProgress: (done, all) {
               completed.value = done;
               total.value = all;

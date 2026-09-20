@@ -164,4 +164,15 @@ abstract final class LocaleKeys {
   static const cameraUnavailable = 'camera_unavailable';
   static const captureFailed = 'capture_failed';
   static const retry = 'retry';
+
+  // PPT to PDF
+  static const addPptFiles = 'add_ppt_files';
+  static const selectedPptFiles = 'selected_ppt_files';
+  static const noPptSelected = 'no_ppt_selected';
+  static const pickPptFailed = 'pick_ppt_failed';
+  static const editPptSlides = 'edit_ppt_slides';
+  static const editPptSlidesHint = 'edit_ppt_slides_hint';
+  static const pptSlides = 'ppt_slides';
+  static const slideLabel = 'slide_label';
+  static const pptBackgroundHint = 'ppt_background_hint';
 }

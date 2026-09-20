@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/excel_to_pdf_controller.dart';
 import '../controllers/html_to_pdf_controller.dart';
 import '../controllers/image_to_pdf_controller.dart';
+import '../controllers/ppt_to_pdf_controller.dart';
 import '../controllers/scan_to_pdf_controller.dart';
 import '../controllers/text_to_pdf_controller.dart';
 import '../controllers/word_to_pdf_controller.dart';
@@ -241,6 +242,9 @@ class HomeController extends GetxController {
         return;
       case ToolId.htmlToPdf:
         HtmlToPdfController.startFromHome();
+        return;
+      case ToolId.pptToPdf:
+        PptToPdfController.startFromHome();
         return;
       case ToolId.scanToPdf:
         ScanToPdfController.startFromHome();

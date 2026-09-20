@@ -4,7 +4,8 @@ enum ConversionType {
   excelToPdf('excel_to_pdf'),
   textToPdf('text_to_pdf'),
   htmlToPdf('html_to_pdf'),
-  scanToPdf('scan_to_pdf');
+  scanToPdf('scan_to_pdf'),
+  pptToPdf('ppt_to_pdf');
 
   const ConversionType(this.storageValue);
   final String storageValue;

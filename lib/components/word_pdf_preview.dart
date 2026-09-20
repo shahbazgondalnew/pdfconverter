@@ -68,6 +68,37 @@ class ExcelPdfPreview extends StatelessWidget {
   }
 }
 
+/// Preview of how PPT content will sit on a landscape PDF page.
+class PptPdfPreview extends StatelessWidget {
+  const PptPdfPreview({
+    super.key,
+    required this.document,
+    required this.settings,
+  });
+
+  final SelectedDocument? document;
+  final PdfPageSettings settings;
+
+  @override
+  Widget build(BuildContext context) {
+    final page =
+        document?.pages.isNotEmpty == true ? document!.pages.first : null;
+
+    return WordPageThumbnail(
+      page: page,
+      documentName: document?.name,
+      settings: settings,
+      aspectRatio: 16 / 9,
+      footerLabel: document == null
+          ? null
+          : LocaleKeys.pptSlides.trParams({
+              'count': '${document!.pageCount}',
+            }),
+      emptyIcon: Icons.slideshow_outlined,
+    );
+  }
+}
+
 /// Single A4-style page thumbnail used in preview and edit screens.
 class WordPageThumbnail extends StatelessWidget {
   const WordPageThumbnail({
@@ -79,6 +110,7 @@ class WordPageThumbnail extends StatelessWidget {
     this.pageNumber,
     this.emptyIcon = Icons.description_outlined,
     this.showFullText = false,
+    this.aspectRatio = 210 / 297,
   });
 
   final WordPage? page;
@@ -88,6 +120,7 @@ class WordPageThumbnail extends StatelessWidget {
   final int? pageNumber;
   final IconData emptyIcon;
   final bool showFullText;
+  final double aspectRatio;
 
   EdgeInsets get _padding {
     switch (settings.fitMode) {
@@ -140,7 +173,7 @@ class WordPageThumbnail extends StatelessWidget {
     final isTable = page?.isTable == true;
 
     return AspectRatio(
-      aspectRatio: 210 / 297,
+      aspectRatio: aspectRatio,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: settings.backgroundColor,
