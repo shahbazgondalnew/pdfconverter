@@ -15,6 +15,7 @@ class SelectedDocumentGrid extends StatelessWidget {
     this.onEdit,
     this.icon = Icons.description_outlined,
     this.showPageCount = false,
+    this.pageCountKey = LocaleKeys.wordPages,
   });
 
   final List<SelectedDocument> documents;
@@ -24,6 +25,7 @@ class SelectedDocumentGrid extends StatelessWidget {
   final ValueChanged<String>? onEdit;
   final IconData icon;
   final bool showPageCount;
+  final String pageCountKey;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class SelectedDocumentGrid extends StatelessWidget {
           document: doc,
           icon: icon,
           showPageCount: showPageCount,
+          pageCountKey: pageCountKey,
           onDelete: () => onDelete(doc.id),
           onEdit: onEdit == null ? null : () => onEdit!(doc.id),
         );
@@ -116,6 +119,7 @@ class _DocumentTile extends StatelessWidget {
     required this.icon,
     required this.onDelete,
     required this.showPageCount,
+    required this.pageCountKey,
     this.onEdit,
   });
 
@@ -124,6 +128,7 @@ class _DocumentTile extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback? onEdit;
   final bool showPageCount;
+  final String pageCountKey;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +161,7 @@ class _DocumentTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     showPageCount && document.pageCount > 0
-                        ? LocaleKeys.wordPages.trParams({
+                        ? pageCountKey.trParams({
                             'count': '${document.pageCount}',
                           })
                         : document.formattedSize,

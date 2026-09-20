@@ -6,15 +6,23 @@ import '../controllers/word_to_pdf_controller.dart';
 class WordToPdfBinding extends Bindings {
   @override
   void dependencies() {
-    if (!Get.isRegistered<WordToPdfController>()) {
-      Get.lazyPut(() => WordToPdfController(), fenix: true);
-    }
+    _ensureParent();
   }
 }
 
 class WordEditBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => WordEditController());
+    _ensureParent();
+    if (Get.isRegistered<WordEditController>()) {
+      Get.delete<WordEditController>(force: true);
+    }
+    Get.put(WordEditController());
+  }
+}
+
+void _ensureParent() {
+  if (!Get.isRegistered<WordToPdfController>()) {
+    Get.put(WordToPdfController(), permanent: true);
   }
 }

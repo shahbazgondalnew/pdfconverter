@@ -6,15 +6,24 @@ import '../controllers/image_to_pdf_controller.dart';
 class ImageToPdfBinding extends Bindings {
   @override
   void dependencies() {
-    if (!Get.isRegistered<ImageToPdfController>()) {
-      Get.lazyPut(() => ImageToPdfController(), fenix: true);
-    }
+    _ensureParent();
   }
 }
 
 class ImageEditBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => ImageEditController());
+    // Keep parent alive — GetX SmartManagement can drop it on push otherwise.
+    _ensureParent();
+    if (Get.isRegistered<ImageEditController>()) {
+      Get.delete<ImageEditController>(force: true);
+    }
+    Get.put(ImageEditController());
+  }
+}
+
+void _ensureParent() {
+  if (!Get.isRegistered<ImageToPdfController>()) {
+    Get.put(ImageToPdfController(), permanent: true);
   }
 }

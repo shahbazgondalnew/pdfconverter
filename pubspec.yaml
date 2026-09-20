@@ -51,6 +51,8 @@ dependencies:
   open_filex: ^4.7.0
   archive: ^4.0.2
   xml: ^6.5.0
+  html: ^0.15.6
+  camera: ^0.11.1
 
 dev_dependencies:
   flutter_test:

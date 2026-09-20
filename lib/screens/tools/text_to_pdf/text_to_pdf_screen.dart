@@ -6,13 +6,13 @@ import '../../../components/pdf_background_picker.dart';
 import '../../../components/section_card.dart';
 import '../../../components/selected_document_grid.dart';
 import '../../../components/word_pdf_preview.dart';
-import '../../../controllers/excel_to_pdf_controller.dart';
+import '../../../controllers/text_to_pdf_controller.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_background.dart';
 
-class ExcelToPdfScreen extends GetView<ExcelToPdfController> {
-  const ExcelToPdfScreen({super.key});
+class TextToPdfScreen extends GetView<TextToPdfController> {
+  const TextToPdfScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +20,13 @@ class ExcelToPdfScreen extends GetView<ExcelToPdfController> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text(LocaleKeys.toolExcelToPdf.tr),
+          title: Text(LocaleKeys.toolTextToPdf.tr),
         ),
         body: Obx(() {
           final docs = controller.documents.toList();
           final settings = controller.settings.value;
           final previewDoc = docs.isEmpty ? null : docs.first;
+          final isDark = Theme.of(context).brightness == Brightness.dark;
 
           return Column(
             children: [
@@ -36,7 +37,50 @@ class ExcelToPdfScreen extends GetView<ExcelToPdfController> {
                   child: Column(
                     children: [
                       SectionCard(
-                        title: LocaleKeys.selectedExcelFiles.tr,
+                        title: LocaleKeys.pasteText.tr,
+                        subtitle: LocaleKeys.pasteTextHint.tr,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextField(
+                              controller: controller.pasteController,
+                              autofocus: controller.focusPaste.value,
+                              minLines: 5,
+                              maxLines: 10,
+                              textInputAction: TextInputAction.newline,
+                              decoration: InputDecoration(
+                                hintText: LocaleKeys.pasteTextPlaceholder.tr,
+                                filled: true,
+                                fillColor: isDark
+                                    ? AppColors.darkMuted
+                                    : AppColors.brandSoft.withValues(
+                                        alpha: 0.45,
+                                      ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: const EdgeInsets.all(14),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: FilledButton.tonalIcon(
+                                onPressed: controller.addPastedText,
+                                icon: const Icon(Icons.add_rounded),
+                                label: Text(LocaleKeys.addPastedText.tr),
+                                style: FilledButton.styleFrom(
+                                  foregroundColor: AppColors.brand,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                      SectionCard(
+                        title: LocaleKeys.selectedTextItems.tr,
                         trailing: Text(
                           '${docs.length}',
                           style:
@@ -50,10 +94,10 @@ class ExcelToPdfScreen extends GetView<ExcelToPdfController> {
                           onDelete: controller.deleteDocument,
                           onEdit: controller.openEditor,
                           onAddMore: controller.addMoreDocuments,
-                          emptyLabel: LocaleKeys.noExcelSelected.tr,
-                          icon: Icons.table_chart_outlined,
+                          emptyLabel: LocaleKeys.noTextSelected.tr,
+                          icon: Icons.notes_outlined,
                           showPageCount: true,
-                          pageCountKey: LocaleKeys.excelSheets,
+                          pageCountKey: LocaleKeys.wordPages,
                         ),
                       ),
                       const SizedBox(height: 14),
@@ -67,7 +111,7 @@ class ExcelToPdfScreen extends GetView<ExcelToPdfController> {
                       const SizedBox(height: 14),
                       SectionCard(
                         title: LocaleKeys.pdfBackground.tr,
-                        subtitle: LocaleKeys.excelBackgroundHint.tr,
+                        subtitle: LocaleKeys.textBackgroundHint.tr,
                         child: PdfBackgroundPicker(
                           option: settings.backgroundOption,
                           customColor: settings.customBackground,
@@ -81,7 +125,7 @@ class ExcelToPdfScreen extends GetView<ExcelToPdfController> {
                         child: Center(
                           child: SizedBox(
                             width: 180,
-                            child: ExcelPdfPreview(
+                            child: WordPdfPreview(
                               document: previewDoc,
                               settings: settings,
                             ),

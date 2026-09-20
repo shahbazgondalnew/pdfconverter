@@ -2,14 +2,46 @@ class WordPage {
   WordPage({
     required this.id,
     required this.index,
-    required this.paragraphs,
-  });
+    List<String>? paragraphs,
+    List<List<String>>? rows,
+    List<String>? blockKinds,
+    this.title,
+  })  : paragraphs = paragraphs ?? <String>[],
+        rows = rows ?? <List<String>>[],
+        blockKinds = blockKinds ?? <String>[];
 
   final String id;
   int index;
+  String? title;
   List<String> paragraphs;
+  List<List<String>> rows;
+  /// Parallel to [paragraphs]: `p`, `h1`, `h2`, `h3`, `li`, `pre`, `quote`.
+  List<String> blockKinds;
+
+  bool get isTable => rows.isNotEmpty;
+
+  String get displayTitle => title?.trim().isNotEmpty == true
+      ? title!
+      : 'Page ${index + 1}';
+
+  String kindAt(int index) {
+    if (index < 0 || index >= blockKinds.length) return 'p';
+    return blockKinds[index];
+  }
 
   String get previewText {
+    if (isTable) {
+      final lines = rows.take(6).map((row) {
+        final cells =
+            row.take(5).map((cell) => cell.trim()).where((c) => c.isNotEmpty);
+        return cells.join(' · ');
+      }).where((line) => line.isNotEmpty);
+      final joined = lines.join('\n').trim();
+      if (joined.isEmpty) return '…';
+      if (joined.length <= 160) return joined;
+      return '${joined.substring(0, 160)}…';
+    }
+
     final joined = paragraphs.join(' ').trim();
     if (joined.isEmpty) return '…';
     if (joined.length <= 140) return joined;
@@ -19,12 +51,19 @@ class WordPage {
   WordPage copyWith({
     String? id,
     int? index,
+    String? title,
     List<String>? paragraphs,
+    List<List<String>>? rows,
+    List<String>? blockKinds,
   }) {
     return WordPage(
       id: id ?? this.id,
       index: index ?? this.index,
+      title: title ?? this.title,
       paragraphs: paragraphs ?? List<String>.from(this.paragraphs),
+      rows: rows ??
+          this.rows.map((row) => List<String>.from(row)).toList(growable: true),
+      blockKinds: blockKinds ?? List<String>.from(this.blockKinds),
     );
   }
 }

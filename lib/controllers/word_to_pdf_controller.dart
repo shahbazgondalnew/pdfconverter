@@ -32,7 +32,7 @@ class WordToPdfController extends GetxController {
 
     final controller = Get.isRegistered<WordToPdfController>()
         ? Get.find<WordToPdfController>()
-        : Get.put(WordToPdfController());
+        : Get.put(WordToPdfController(), permanent: true);
 
     controller.clearDocuments();
     await controller.pickDocuments();

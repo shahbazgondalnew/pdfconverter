@@ -6,7 +6,9 @@ import '../models/document_models.dart';
 import '../models/image_to_pdf_models.dart';
 import '../routes/app_routes.dart';
 import '../services/excel_to_pdf_service.dart';
+import '../services/html_to_pdf_service.dart';
 import '../services/image_to_pdf_service.dart';
+import '../services/text_to_pdf_service.dart';
 import '../services/word_to_pdf_service.dart';
 import 'history_controller.dart';
 
@@ -61,12 +63,71 @@ class PdfProgressController extends GetxController {
             },
           );
         case 'excel_to_pdf':
-          progressLabel.value = LocaleKeys.conversionProgressFiles;
+          progressLabel.value = LocaleKeys.conversionProgressPages;
           final documents =
               List<SelectedDocument>.from(args['documents'] as List);
-          total.value = documents.length;
+          final settings = args['settings'] as PdfPageSettings? ??
+              PdfPageSettings();
+          final pageTotal = documents.fold<int>(
+            0,
+            (sum, doc) => sum + doc.pageCount,
+          );
+          total.value = pageTotal > 0 ? pageTotal : documents.length;
           record = await const ExcelToPdfService().convert(
             documents: documents,
+            settings: settings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+        case 'text_to_pdf':
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          final documents =
+              List<SelectedDocument>.from(args['documents'] as List);
+          final settings = args['settings'] as PdfPageSettings? ??
+              PdfPageSettings();
+          final pageTotal = documents.fold<int>(
+            0,
+            (sum, doc) => sum + doc.pageCount,
+          );
+          total.value = pageTotal > 0 ? pageTotal : documents.length;
+          record = await const TextToPdfService().convert(
+            documents: documents,
+            settings: settings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+        case 'html_to_pdf':
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          final documents =
+              List<SelectedDocument>.from(args['documents'] as List);
+          final settings = args['settings'] as PdfPageSettings? ??
+              PdfPageSettings();
+          final pageTotal = documents.fold<int>(
+            0,
+            (sum, doc) => sum + doc.pageCount,
+          );
+          total.value = pageTotal > 0 ? pageTotal : documents.length;
+          record = await const HtmlToPdfService().convert(
+            documents: documents,
+            settings: settings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+        case 'scan_to_pdf':
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final scanImages = List<SelectedImage>.from(args['images'] as List);
+          final scanSettings = args['settings'] as PdfPageSettings;
+          total.value = scanImages.length;
+          record = await const ImageToPdfService().convert(
+            images: scanImages,
+            settings: scanSettings,
+            conversionType: ConversionType.scanToPdf,
             onProgress: (done, all) {
               completed.value = done;
               total.value = all;
@@ -81,6 +142,7 @@ class PdfProgressController extends GetxController {
           record = await const ImageToPdfService().convert(
             images: images,
             settings: settings,
+            conversionType: ConversionType.imageToPdf,
             onProgress: (done, all) {
               completed.value = done;
               total.value = all;

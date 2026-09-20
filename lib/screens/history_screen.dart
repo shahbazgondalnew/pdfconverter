@@ -18,6 +18,12 @@ class HistoryScreen extends GetView<HistoryController> {
         return LocaleKeys.toolWordToPdf.tr;
       case ConversionType.excelToPdf:
         return LocaleKeys.toolExcelToPdf.tr;
+      case ConversionType.textToPdf:
+        return LocaleKeys.toolTextToPdf.tr;
+      case ConversionType.htmlToPdf:
+        return LocaleKeys.toolHtmlToPdf.tr;
+      case ConversionType.scanToPdf:
+        return LocaleKeys.toolScanToPdf.tr;
     }
   }
 

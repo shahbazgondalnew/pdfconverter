@@ -8,6 +8,7 @@ import '../../../components/section_card.dart';
 import '../../../components/selected_image_grid.dart';
 import '../../../controllers/image_to_pdf_controller.dart';
 import '../../../localization/locale_keys.dart';
+import '../../../models/conversion_record.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_background.dart';
 
@@ -20,7 +21,13 @@ class ImageToPdfScreen extends GetView<ImageToPdfController> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text(LocaleKeys.toolImageToPdf.tr),
+          title: Obx(
+            () => Text(
+              controller.conversionType.value == ConversionType.scanToPdf
+                  ? LocaleKeys.toolScanToPdf.tr
+                  : LocaleKeys.toolImageToPdf.tr,
+            ),
+          ),
         ),
         body: Obx(() {
           final images = controller.images.toList();

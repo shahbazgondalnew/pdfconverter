@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/excel_to_pdf_controller.dart';
+import '../controllers/html_to_pdf_controller.dart';
 import '../controllers/image_to_pdf_controller.dart';
+import '../controllers/scan_to_pdf_controller.dart';
+import '../controllers/text_to_pdf_controller.dart';
 import '../controllers/word_to_pdf_controller.dart';
 import '../localization/locale_keys.dart';
 import '../models/tool_models.dart';
@@ -232,6 +235,15 @@ class HomeController extends GetxController {
         return;
       case ToolId.excelToPdf:
         ExcelToPdfController.startFromHome();
+        return;
+      case ToolId.textToPdf:
+        TextToPdfController.startFromHome();
+        return;
+      case ToolId.htmlToPdf:
+        HtmlToPdfController.startFromHome();
+        return;
+      case ToolId.scanToPdf:
+        ScanToPdfController.startFromHome();
         return;
       default:
         Get.snackbar(

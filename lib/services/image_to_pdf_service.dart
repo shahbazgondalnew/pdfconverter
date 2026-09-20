@@ -18,6 +18,7 @@ class ImageToPdfService {
   Future<ConversionRecord> convert({
     required List<SelectedImage> images,
     required PdfPageSettings settings,
+    ConversionType conversionType = ConversionType.imageToPdf,
     ConversionProgressCallback? onProgress,
   }) async {
     if (images.isEmpty) {
@@ -81,8 +82,10 @@ class ImageToPdfService {
     }
 
     final stamp = DateTime.now();
+    final prefix =
+        conversionType == ConversionType.scanToPdf ? 'SCAN_PDF' : 'IMG_PDF';
     final fileName =
-        'IMG_PDF_${stamp.year}${_two(stamp.month)}${_two(stamp.day)}_${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}.pdf';
+        '${prefix}_${stamp.year}${_two(stamp.month)}${_two(stamp.day)}_${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}.pdf';
     final output = await ConversionStorage.createOutputFile(fileName);
     final pdfBytes = await document.save();
     await output.writeAsBytes(pdfBytes, flush: true);
@@ -92,7 +95,7 @@ class ImageToPdfService {
       name: p.basename(output.path),
       path: output.path,
       sizeBytes: await output.length(),
-      conversionType: ConversionType.imageToPdf,
+      conversionType: conversionType,
       createdAt: stamp,
       pageCount: total,
     );

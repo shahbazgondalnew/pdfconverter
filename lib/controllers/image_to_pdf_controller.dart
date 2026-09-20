@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../components/image_source_bottom_sheet.dart';
 import '../components/image_source_picker.dart';
 import '../localization/locale_keys.dart';
+import '../models/conversion_record.dart';
 import '../models/image_to_pdf_models.dart';
 import '../routes/app_routes.dart';
 
@@ -13,11 +14,14 @@ class ImageToPdfController extends GetxController {
   final images = <SelectedImage>[].obs;
   final settings = PdfPageSettings().obs;
   final isBusy = false.obs;
+  final conversionType = ConversionType.imageToPdf.obs;
 
   final _picker = ImagePicker();
 
   void clearImages() {
     images.clear();
+    settings.value = PdfPageSettings();
+    conversionType.value = ConversionType.imageToPdf;
   }
 
   /// Opens source bottom sheet, picks images, then navigates if any were added.
@@ -25,15 +29,40 @@ class ImageToPdfController extends GetxController {
     final source = await ImageSourceBottomSheet.show();
     if (source == null) return;
 
-    final controller = Get.isRegistered<ImageToPdfController>()
-        ? Get.find<ImageToPdfController>()
-        : Get.put(ImageToPdfController());
-
+    final controller = _ensureController();
     controller.clearImages();
     await controller.pickFromSource(source);
 
     if (controller.images.isEmpty) return;
     Get.toNamed(AppRoutes.imageToPdf);
+  }
+
+  /// Continues from Scan to PDF with already captured/selected images.
+  static void startFromScan({
+    required List<String> paths,
+    ConversionType conversionType = ConversionType.scanToPdf,
+  }) {
+    final controller = _ensureController();
+    controller.clearImages();
+    controller.conversionType.value = conversionType;
+    controller.addImagePaths(paths);
+
+    // Replace scan route with the review screen.
+    Get.offNamed(AppRoutes.imageToPdf);
+  }
+
+  static ImageToPdfController _ensureController() {
+    if (Get.isRegistered<ImageToPdfController>()) {
+      return Get.find<ImageToPdfController>();
+    }
+    return Get.put(ImageToPdfController(), permanent: true);
+  }
+
+  /// Call when leaving the image/scan tool flow entirely.
+  static void disposeTool() {
+    if (Get.isRegistered<ImageToPdfController>()) {
+      Get.delete<ImageToPdfController>(force: true);
+    }
   }
 
   /// Opens source bottom sheet to append more images.
@@ -57,7 +86,7 @@ class ImageToPdfController extends GetxController {
       }
     } catch (_) {
       Get.snackbar(
-        LocaleKeys.toolImageToPdf.tr,
+        _toolTitle,
         LocaleKeys.pickImagesFailed.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
@@ -67,10 +96,14 @@ class ImageToPdfController extends GetxController {
     }
   }
 
+  String get _toolTitle => conversionType.value == ConversionType.scanToPdf
+      ? LocaleKeys.toolScanToPdf.tr
+      : LocaleKeys.toolImageToPdf.tr;
+
   Future<void> _pickFromGallery() async {
     final files = await _picker.pickMultiImage(imageQuality: 95);
     if (files.isEmpty) return;
-    _addPaths(files.map((file) => file.path));
+    addImagePaths(files.map((file) => file.path));
   }
 
   Future<void> _pickFromCamera() async {
@@ -79,7 +112,7 @@ class ImageToPdfController extends GetxController {
       imageQuality: 95,
     );
     if (file == null) return;
-    _addPaths([file.path]);
+    addImagePaths([file.path]);
   }
 
   Future<void> _pickFromFiles() async {
@@ -92,10 +125,10 @@ class ImageToPdfController extends GetxController {
     final paths = result.files
         .where((file) => file.path != null)
         .map((file) => file.path!);
-    _addPaths(paths);
+    addImagePaths(paths);
   }
 
-  void _addPaths(Iterable<String> paths) {
+  void addImagePaths(Iterable<String> paths) {
     final stamp = DateTime.now().microsecondsSinceEpoch;
     var index = 0;
     for (final path in paths) {
@@ -146,7 +179,7 @@ class ImageToPdfController extends GetxController {
   void onCreatePdfPressed() {
     if (images.isEmpty) {
       Get.snackbar(
-        LocaleKeys.toolImageToPdf.tr,
+        _toolTitle,
         LocaleKeys.noImagesSelected.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
@@ -154,10 +187,14 @@ class ImageToPdfController extends GetxController {
       return;
     }
 
+    final type = conversionType.value == ConversionType.scanToPdf
+        ? 'scan_to_pdf'
+        : 'image_to_pdf';
+
     Get.toNamed(
       AppRoutes.pdfProgress,
       arguments: {
-        'type': 'image_to_pdf',
+        'type': type,
         'images': images.toList(),
         'settings': settings.value,
       },

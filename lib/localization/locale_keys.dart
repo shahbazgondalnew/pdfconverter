@@ -122,5 +122,46 @@ abstract final class LocaleKeys {
   static const selectedExcelFiles = 'selected_excel_files';
   static const noExcelSelected = 'no_excel_selected';
   static const pickExcelFailed = 'pick_excel_failed';
+  static const editExcelPages = 'edit_excel_pages';
+  static const editExcelPagesHint = 'edit_excel_pages_hint';
+  static const excelSheets = 'excel_sheets';
+  static const excelBackgroundHint = 'excel_background_hint';
   static const conversionProgressFiles = 'conversion_progress_files';
+
+  // Text to PDF
+  static const addTextContent = 'add_text_content';
+  static const pasteText = 'paste_text';
+  static const pasteTextHint = 'paste_text_hint';
+  static const pasteTextPlaceholder = 'paste_text_placeholder';
+  static const addPastedText = 'add_pasted_text';
+  static const pastedText = 'pasted_text';
+  static const pastedTextAdded = 'pasted_text_added';
+  static const pasteTextEmpty = 'paste_text_empty';
+  static const selectedTextItems = 'selected_text_items';
+  static const noTextSelected = 'no_text_selected';
+  static const pickTextFailed = 'pick_text_failed';
+  static const editTextPages = 'edit_text_pages';
+  static const editTextPagesHint = 'edit_text_pages_hint';
+  static const textBackgroundHint = 'text_background_hint';
+
+  // HTML to PDF
+  static const addHtmlContent = 'add_html_content';
+  static const pasteHtml = 'paste_html';
+  static const pasteHtmlHint = 'paste_html_hint';
+  static const pasteHtmlPlaceholder = 'paste_html_placeholder';
+  static const addPastedHtml = 'add_pasted_html';
+  static const pastedHtml = 'pasted_html';
+  static const pastedHtmlAdded = 'pasted_html_added';
+  static const pasteHtmlEmpty = 'paste_html_empty';
+  static const selectedHtmlItems = 'selected_html_items';
+  static const noHtmlSelected = 'no_html_selected';
+  static const pickHtmlFailed = 'pick_html_failed';
+  static const editHtmlPages = 'edit_html_pages';
+  static const editHtmlPagesHint = 'edit_html_pages_hint';
+  static const htmlBackgroundHint = 'html_background_hint';
+
+  // Scan to PDF
+  static const cameraUnavailable = 'camera_unavailable';
+  static const captureFailed = 'capture_failed';
+  static const retry = 'retry';
 }
