@@ -117,6 +117,14 @@ class PdfProgressController extends GetxController {
         : Get.put(PdfToImageController(), permanent: true);
     controller.setPages(rendered, append: append);
 
+    // Store as one history group as soon as conversion/preview is ready
+    // (same idea as PDF tools saving when conversion finishes).
+    try {
+      await controller.persistToHistory();
+    } catch (_) {
+      // Preview can still continue; user can retry via Done.
+    }
+
     if (append) {
       // Close progress and return to the existing review screen.
       Get.back();

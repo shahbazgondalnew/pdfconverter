@@ -137,7 +137,7 @@ class HistoryScreen extends GetView<HistoryController> {
                                   IconButton(
                                     tooltip: LocaleKeys.saveToGallery.tr,
                                     onPressed: () =>
-                                        controller.saveImagesToGallery(record),
+                                        controller.promptSaveToGallery(record),
                                     icon: const Icon(
                                       Icons.photo_library_outlined,
                                     ),

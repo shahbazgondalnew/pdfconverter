@@ -1,16 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gal/gal.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../components/select_images_to_save_sheet.dart';
 import '../../../controllers/pdf_conversion_controller.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../models/conversion_record.dart';
 import '../../../routes/app_routes.dart';
 import '../../../services/conversion_storage.dart';
+import '../../../services/gallery_save_service.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_background.dart';
 
@@ -183,50 +184,32 @@ class PdfResultScreen extends GetView<PdfResultController> {
   }
 
   Future<void> _saveToGallery(ConversionRecord record) async {
-    try {
-      final granted = await Gal.requestAccess();
-      if (!granted) {
-        Get.snackbar(
-          LocaleKeys.toolPdfToImage.tr,
-          LocaleKeys.gallerySaveFailed.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: const EdgeInsets.all(12),
-        );
-        return;
-      }
+    final files = ConversionStorage.resolveFiles(record)
+        .where((file) => file.existsSync())
+        .toList();
+    await const GallerySaveService().saveFiles(
+      files,
+      snackTitle: LocaleKeys.toolPdfToImage,
+    );
+  }
 
-      final files = ConversionStorage.resolveFiles(record);
-      var saved = 0;
-      for (final file in files) {
-        if (!await file.exists()) continue;
-        await Gal.putImage(file.path, album: 'PDF Converter');
-        saved++;
-      }
-
-      if (saved == 0) {
-        Get.snackbar(
-          LocaleKeys.toolPdfToImage.tr,
-          LocaleKeys.fileMissing.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: const EdgeInsets.all(12),
-        );
-        return;
-      }
-
+  Future<void> _selectAndSaveToGallery(ConversionRecord record) async {
+    final files = ConversionStorage.resolveFiles(record)
+        .where((file) => file.existsSync())
+        .toList();
+    if (files.isEmpty) {
       Get.snackbar(
         LocaleKeys.toolPdfToImage.tr,
-        LocaleKeys.gallerySaveSuccess.tr,
+        LocaleKeys.fileMissing.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
       );
-    } catch (_) {
-      Get.snackbar(
-        LocaleKeys.toolPdfToImage.tr,
-        LocaleKeys.gallerySaveFailed.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
-      );
+      return;
     }
+    await SelectImagesToSaveSheet.show(
+      files: files,
+      snackTitle: LocaleKeys.toolPdfToImage,
+    );
   }
 
   Future<void> _save(ConversionRecord record) async {
@@ -409,7 +392,7 @@ class PdfResultScreen extends GetView<PdfResultController> {
                       ),
                       label: Text(
                         isImages
-                            ? LocaleKeys.saveToGallery.tr
+                            ? LocaleKeys.saveAllImages.tr
                             : LocaleKeys.savePdf.tr,
                       ),
                       style: OutlinedButton.styleFrom(
@@ -421,6 +404,25 @@ class PdfResultScreen extends GetView<PdfResultController> {
                       ),
                     ),
                   ),
+                  if (isImages) ...[
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: OutlinedButton.icon(
+                        onPressed: () => _selectAndSaveToGallery(record),
+                        icon: const Icon(Icons.checklist_rounded),
+                        label: Text(LocaleKeys.selectImages.tr),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.brand,
+                          side: const BorderSide(color: AppColors.brand),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 10),
                   SizedBox(
                     width: double.infinity,

@@ -52,22 +52,57 @@ class PdfToImageScreen extends GetView<PdfToImageController> {
                 top: false,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: FilledButton.icon(
-                      onPressed: controller.isBusy.value
-                          ? null
-                          : controller.onSavePressed,
-                      icon: const Icon(Icons.save_alt_rounded),
-                      label: Text(LocaleKeys.saveImages.tr),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.brand,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: FilledButton.icon(
+                          onPressed: controller.isBusy.value
+                              ? null
+                              : controller.saveAllToGallery,
+                          icon: const Icon(Icons.photo_library_outlined),
+                          label: Text(LocaleKeys.saveAllImages.tr),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.brand,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: OutlinedButton.icon(
+                          onPressed: controller.isBusy.value
+                              ? null
+                              : controller.selectImagesToGallery,
+                          icon: const Icon(Icons.checklist_rounded),
+                          label: Text(LocaleKeys.selectImages.tr),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.brand,
+                            side: const BorderSide(color: AppColors.brand),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: TextButton.icon(
+                          onPressed: controller.isBusy.value
+                              ? null
+                              : controller.onDonePressed,
+                          icon: const Icon(Icons.check_rounded),
+                          label: Text(LocaleKeys.done.tr),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

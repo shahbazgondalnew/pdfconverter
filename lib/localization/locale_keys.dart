@@ -184,6 +184,12 @@ abstract final class LocaleKeys {
   static const savingImages = 'saving_images';
   static const imagesReady = 'images_ready';
   static const saveToGallery = 'save_to_gallery';
+  static const saveAllImages = 'save_all_images';
+  static const selectImages = 'select_images';
+  static const selectAll = 'select_all';
+  static const deselectAll = 'deselect_all';
+  static const selectedCount = 'selected_count';
+  static const saveSelectedImages = 'save_selected_images';
   static const shareImages = 'share_images';
   static const openImages = 'open_images';
   static const imageMeta = 'image_meta';

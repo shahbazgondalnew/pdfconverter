@@ -1,14 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gal/gal.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../components/select_images_to_save_sheet.dart';
 import '../localization/locale_keys.dart';
 import '../models/conversion_record.dart';
 import '../services/conversion_storage.dart';
+import '../services/gallery_save_service.dart';
+import '../theme/app_colors.dart';
+import 'pdf_to_image_controller.dart';
 
 class HistoryController extends GetxController {
   final records = <ConversionRecord>[].obs;
@@ -83,58 +86,108 @@ class HistoryController extends GetxController {
     );
   }
 
-  Future<void> saveImagesToGallery(ConversionRecord record) async {
+  List<File> _existingImageFiles(ConversionRecord record) {
+    return ConversionStorage.resolveFiles(record)
+        .where((file) => file.existsSync())
+        .toList();
+  }
+
+  Future<void> saveAllImagesToGallery(ConversionRecord record) async {
     if (!record.isImageGroup) return;
-    try {
-      final granted = await Gal.requestAccess();
-      if (!granted) {
-        Get.snackbar(
-          LocaleKeys.historyTitle.tr,
-          LocaleKeys.gallerySaveFailed.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: const EdgeInsets.all(12),
-        );
-        return;
-      }
+    final files = _existingImageFiles(record);
+    final ok = await const GallerySaveService().saveFiles(
+      files,
+      snackTitle: LocaleKeys.historyTitle,
+    );
+    if (!ok && files.isEmpty) reload();
+  }
 
-      final files = ConversionStorage.resolveFiles(record);
-      var saved = 0;
-      for (final file in files) {
-        if (!await file.exists()) continue;
-        await Gal.putImage(file.path, album: 'PDF Converter');
-        saved++;
-      }
-
-      if (saved == 0) {
-        Get.snackbar(
-          LocaleKeys.historyTitle.tr,
-          LocaleKeys.fileMissing.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          margin: const EdgeInsets.all(12),
-        );
-        reload();
-        return;
-      }
-
+  Future<void> selectImagesToSave(ConversionRecord record) async {
+    if (!record.isImageGroup) return;
+    final files = _existingImageFiles(record);
+    if (files.isEmpty) {
       Get.snackbar(
         LocaleKeys.historyTitle.tr,
-        LocaleKeys.gallerySaveSuccess.tr,
+        LocaleKeys.fileMissing.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
       );
-    } catch (_) {
-      Get.snackbar(
-        LocaleKeys.historyTitle.tr,
-        LocaleKeys.gallerySaveFailed.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
-      );
+      reload();
+      return;
+    }
+    await SelectImagesToSaveSheet.show(
+      files: files,
+      snackTitle: LocaleKeys.historyTitle,
+    );
+  }
+
+  Future<void> promptSaveToGallery(ConversionRecord record) async {
+    if (!record.isImageGroup) return;
+    final isDark = Get.isDarkMode;
+
+    final choice = await Get.bottomSheet<String>(
+      SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkSurface : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(99),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                LocaleKeys.saveToGallery.tr,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                leading: const Icon(Icons.photo_library_outlined,
+                    color: AppColors.brand),
+                title: Text(LocaleKeys.saveAllImages.tr),
+                onTap: () => Get.back(result: 'all'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              ListTile(
+                leading:
+                    const Icon(Icons.checklist_rounded, color: AppColors.brand),
+                title: Text(LocaleKeys.selectImages.tr),
+                onTap: () => Get.back(result: 'select'),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+    );
+
+    if (choice == 'all') {
+      await saveAllImagesToGallery(record);
+    } else if (choice == 'select') {
+      await selectImagesToSave(record);
     }
   }
 
   Future<void> openRecord(ConversionRecord record) async {
     if (record.isImageGroup) {
-      await _showImageGroupSheet(record);
+      await PdfToImageController.openFromHistory(record);
       return;
     }
 
@@ -160,121 +213,5 @@ class HistoryController extends GetxController {
         margin: const EdgeInsets.all(12),
       );
     }
-  }
-
-  Future<void> _showImageGroupSheet(ConversionRecord record) async {
-    final files = ConversionStorage.resolveFiles(record)
-        .where((file) => file.existsSync())
-        .toList();
-    if (files.isEmpty) {
-      Get.snackbar(
-        LocaleKeys.historyTitle.tr,
-        LocaleKeys.fileMissing.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
-      );
-      reload();
-      return;
-    }
-
-    await Get.bottomSheet(
-      SafeArea(
-        child: Container(
-          constraints: BoxConstraints(
-            maxHeight: Get.height * 0.72,
-          ),
-          decoration: BoxDecoration(
-            color: Get.isDarkMode
-                ? const Color(0xFF1E1E1E)
-                : Colors.white,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.35),
-                  borderRadius: BorderRadius.circular(99),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 8, 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        record.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: LocaleKeys.saveToGallery.tr,
-                      onPressed: () async {
-                        Get.back();
-                        await saveImagesToGallery(record);
-                      },
-                      icon: const Icon(Icons.photo_library_outlined),
-                    ),
-                    IconButton(
-                      tooltip: LocaleKeys.shareImages.tr,
-                      onPressed: () async {
-                        Get.back();
-                        await shareRecord(record);
-                      },
-                      icon: const Icon(Icons.ios_share_rounded),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 0.72,
-                  ),
-                  itemCount: files.length,
-                  itemBuilder: (context, index) {
-                    final file = files[index];
-                    return Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
-                        onTap: () async {
-                          Get.back();
-                          await OpenFilex.open(file.path);
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: Image.file(
-                            file,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => const ColoredBox(
-                              color: Color(0xFFEFEFEF),
-                              child: Icon(Icons.broken_image_outlined),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      isScrollControlled: true,
-    );
   }
 }
