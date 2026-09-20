@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/history_controller.dart';
 import '../localization/locale_keys.dart';
 import '../models/conversion_record.dart';
+import '../services/conversion_storage.dart';
 import '../theme/app_colors.dart';
 import '../widgets/app_background.dart';
 
@@ -26,6 +27,8 @@ class HistoryScreen extends GetView<HistoryController> {
         return LocaleKeys.toolScanToPdf.tr;
       case ConversionType.pptToPdf:
         return LocaleKeys.toolPptToPdf.tr;
+      case ConversionType.pdfToImage:
+        return LocaleKeys.toolPdfToImage.tr;
     }
   }
 
@@ -101,19 +104,7 @@ class HistoryScreen extends GetView<HistoryController> {
                             ),
                             child: Row(
                               children: [
-                                Container(
-                                  width: 46,
-                                  height: 46,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    color:
-                                        AppColors.brand.withValues(alpha: 0.12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.picture_as_pdf_rounded,
-                                    color: AppColors.brand,
-                                  ),
-                                ),
+                                _HistoryThumb(record: record),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
@@ -130,7 +121,9 @@ class HistoryScreen extends GetView<HistoryController> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        '${_typeLabel(record.conversionType)} · ${record.formattedSize}',
+                                        record.isImageGroup
+                                            ? '${_typeLabel(record.conversionType)} · ${LocaleKeys.imageGroupLabel.trParams({'count': '${record.pageCount}'})} · ${record.formattedSize}'
+                                            : '${_typeLabel(record.conversionType)} · ${record.formattedSize}',
                                         style: textTheme.bodySmall?.copyWith(
                                           color: Theme.of(context)
                                               .colorScheme
@@ -140,8 +133,19 @@ class HistoryScreen extends GetView<HistoryController> {
                                     ],
                                   ),
                                 ),
+                                if (record.isImageGroup)
+                                  IconButton(
+                                    tooltip: LocaleKeys.saveToGallery.tr,
+                                    onPressed: () =>
+                                        controller.saveImagesToGallery(record),
+                                    icon: const Icon(
+                                      Icons.photo_library_outlined,
+                                    ),
+                                  ),
                                 IconButton(
-                                  tooltip: LocaleKeys.sharePdf.tr,
+                                  tooltip: record.isImageGroup
+                                      ? LocaleKeys.shareImages.tr
+                                      : LocaleKeys.sharePdf.tr,
                                   onPressed: () =>
                                       controller.shareRecord(record),
                                   icon: const Icon(Icons.ios_share_rounded),
@@ -163,6 +167,88 @@ class HistoryScreen extends GetView<HistoryController> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryThumb extends StatelessWidget {
+  const _HistoryThumb({required this.record});
+
+  final ConversionRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!record.isImageGroup) {
+      return Container(
+        width: 46,
+        height: 46,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: AppColors.brand.withValues(alpha: 0.12),
+        ),
+        child: const Icon(
+          Icons.picture_as_pdf_rounded,
+          color: AppColors.brand,
+        ),
+      );
+    }
+
+    final files = ConversionStorage.resolveFiles(record);
+    final first = files.isNotEmpty ? files.first : null;
+    final exists = first != null && first.existsSync();
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: SizedBox(
+        width: 46,
+        height: 46,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            if (exists)
+              Image.file(
+                first,
+                fit: BoxFit.cover,
+                errorBuilder: (_, _, _) => ColoredBox(
+                  color: AppColors.brand.withValues(alpha: 0.12),
+                  child: const Icon(
+                    Icons.photo_library_outlined,
+                    color: AppColors.brand,
+                  ),
+                ),
+              )
+            else
+              ColoredBox(
+                color: AppColors.brand.withValues(alpha: 0.12),
+                child: const Icon(
+                  Icons.photo_library_outlined,
+                  color: AppColors.brand,
+                ),
+              ),
+            if (record.pageCount > 1)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  margin: const EdgeInsets.all(3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.65),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    '${record.pageCount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );

@@ -69,6 +69,10 @@ class ConversionStorage {
     return resolveFile(storedPath).path;
   }
 
+  static List<File> resolveFiles(ConversionRecord record) {
+    return record.allPaths.map(resolveFile).toList();
+  }
+
   static Future<File> createOutputFile(String fileName) async {
     _ensureReady();
     final safeName = fileName.replaceAll(RegExp(r'[^\w\-. ]'), '_');
@@ -78,7 +82,12 @@ class ConversionStorage {
 
   static Future<ConversionRecord> saveRecord(ConversionRecord record) async {
     _ensureReady();
-    final portable = record.copyWith(path: toStoredPath(record.path));
+    final portablePaths =
+        record.allPaths.map(toStoredPath).toList(growable: false);
+    final portable = record.copyWith(
+      path: portablePaths.isNotEmpty ? portablePaths.first : '',
+      paths: portablePaths,
+    );
     await _box!.put(portable.id, portable.toMap());
     return portable;
   }
@@ -88,9 +97,13 @@ class ConversionStorage {
     final records = _box!.values
         .whereType<Map>()
         .map((map) => ConversionRecord.fromMap(map))
-        .map(
-          (record) => record.copyWith(path: toStoredPath(record.path)),
-        )
+        .map((record) {
+          final paths = record.allPaths.map(toStoredPath).toList();
+          return record.copyWith(
+            path: paths.isNotEmpty ? paths.first : toStoredPath(record.path),
+            paths: paths,
+          );
+        })
         .toList()
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return records;
@@ -101,9 +114,11 @@ class ConversionStorage {
     final raw = _box!.get(id);
     if (raw is Map) {
       final record = ConversionRecord.fromMap(raw);
-      final file = resolveFile(record.path);
-      if (await file.exists()) {
-        await file.delete();
+      for (final stored in record.allPaths) {
+        final file = resolveFile(stored);
+        if (await file.exists()) {
+          await file.delete();
+        }
       }
     }
     await _box!.delete(id);
@@ -112,9 +127,11 @@ class ConversionStorage {
   static Future<void> clearAll() async {
     _ensureReady();
     for (final record in getAllRecords()) {
-      final file = resolveFile(record.path);
-      if (await file.exists()) {
-        await file.delete();
+      for (final stored in record.allPaths) {
+        final file = resolveFile(stored);
+        if (await file.exists()) {
+          await file.delete();
+        }
       }
     }
     await _box!.clear();
@@ -126,13 +143,30 @@ class ConversionStorage {
     for (final key in _box!.keys.toList()) {
       final raw = _box!.get(key);
       if (raw is! Map) continue;
-      final path = raw['path'] as String?;
-      if (path == null || path.isEmpty) continue;
-      if (!p.isAbsolute(path)) continue;
-
       final updated = Map<dynamic, dynamic>.from(raw);
-      updated['path'] = toStoredPath(path);
-      await _box!.put(key, updated);
+      var changed = false;
+
+      final path = updated['path'] as String?;
+      if (path != null && path.isNotEmpty && p.isAbsolute(path)) {
+        updated['path'] = toStoredPath(path);
+        changed = true;
+      }
+
+      final paths = updated['paths'];
+      if (paths is List) {
+        final migrated = paths.map((e) {
+          final value = e.toString();
+          return p.isAbsolute(value) ? toStoredPath(value) : value;
+        }).toList();
+        if (migrated.join('|') != paths.map((e) => e.toString()).join('|')) {
+          updated['paths'] = migrated;
+          changed = true;
+        }
+      }
+
+      if (changed) {
+        await _box!.put(key, updated);
+      }
     }
   }
 }

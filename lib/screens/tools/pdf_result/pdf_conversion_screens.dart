@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gal/gal.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
@@ -53,6 +54,10 @@ class PdfProgressScreen extends GetView<PdfProgressController> {
                   );
                 }
 
+                final isImageFlow =
+                    controller.titleKey.value == LocaleKeys.convertingImages ||
+                        controller.titleKey.value == LocaleKeys.savingImages;
+
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -64,15 +69,17 @@ class PdfProgressScreen extends GetView<PdfProgressController> {
                         shape: BoxShape.circle,
                         color: AppColors.brand.withValues(alpha: 0.12),
                       ),
-                      child: const Icon(
-                        Icons.picture_as_pdf_rounded,
+                      child: Icon(
+                        isImageFlow
+                            ? Icons.image_outlined
+                            : Icons.picture_as_pdf_rounded,
                         size: 42,
                         color: AppColors.brand,
                       ),
                     ),
                     const SizedBox(height: 28),
                     Text(
-                      LocaleKeys.convertingPdf.tr,
+                      controller.titleKey.value.tr,
                       style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                             fontWeight: FontWeight.w800,
                           ),
@@ -129,6 +136,33 @@ class PdfResultScreen extends GetView<PdfResultController> {
   const PdfResultScreen({super.key});
 
   Future<void> _share(ConversionRecord record) async {
+    if (record.isImageGroup) {
+      final files = ConversionStorage.resolveFiles(record);
+      final existing = <XFile>[];
+      for (final file in files) {
+        if (await file.exists()) {
+          existing.add(
+            XFile(file.path, mimeType: 'image/png', name: file.uri.pathSegments.last),
+          );
+        }
+      }
+      if (existing.isEmpty) {
+        Get.snackbar(
+          LocaleKeys.toolPdfToImage.tr,
+          LocaleKeys.fileMissing.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
+        return;
+      }
+      await Share.shareXFiles(
+        existing,
+        subject: record.name,
+        text: LocaleKeys.sharePdfText.trParams({'name': record.name}),
+      );
+      return;
+    }
+
     final absolutePath = ConversionStorage.resolvePath(record.path);
     final file = File(absolutePath);
     if (!await file.exists()) {
@@ -148,9 +182,58 @@ class PdfResultScreen extends GetView<PdfResultController> {
     );
   }
 
+  Future<void> _saveToGallery(ConversionRecord record) async {
+    try {
+      final granted = await Gal.requestAccess();
+      if (!granted) {
+        Get.snackbar(
+          LocaleKeys.toolPdfToImage.tr,
+          LocaleKeys.gallerySaveFailed.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
+        return;
+      }
+
+      final files = ConversionStorage.resolveFiles(record);
+      var saved = 0;
+      for (final file in files) {
+        if (!await file.exists()) continue;
+        await Gal.putImage(file.path, album: 'PDF Converter');
+        saved++;
+      }
+
+      if (saved == 0) {
+        Get.snackbar(
+          LocaleKeys.toolPdfToImage.tr,
+          LocaleKeys.fileMissing.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
+        return;
+      }
+
+      Get.snackbar(
+        LocaleKeys.toolPdfToImage.tr,
+        LocaleKeys.gallerySaveSuccess.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+      );
+    } catch (_) {
+      Get.snackbar(
+        LocaleKeys.toolPdfToImage.tr,
+        LocaleKeys.gallerySaveFailed.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+      );
+    }
+  }
+
   Future<void> _save(ConversionRecord record) async {
-    // Opens the system share/save sheet so the user can save to Files/Drive/etc.
-    // The PDF is already stored in the app documents directory via Hive metadata.
+    if (record.isImageGroup) {
+      await _saveToGallery(record);
+      return;
+    }
     await _share(record);
   }
 
@@ -159,7 +242,9 @@ class PdfResultScreen extends GetView<PdfResultController> {
     final file = File(absolutePath);
     if (!await file.exists()) {
       Get.snackbar(
-        LocaleKeys.toolImageToPdf.tr,
+        record.isImageGroup
+            ? LocaleKeys.toolPdfToImage.tr
+            : LocaleKeys.toolImageToPdf.tr,
         LocaleKeys.fileMissing.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
@@ -170,7 +255,9 @@ class PdfResultScreen extends GetView<PdfResultController> {
     final result = await OpenFilex.open(absolutePath);
     if (result.type != ResultType.done) {
       Get.snackbar(
-        LocaleKeys.toolImageToPdf.tr,
+        record.isImageGroup
+            ? LocaleKeys.toolPdfToImage.tr
+            : LocaleKeys.toolImageToPdf.tr,
         LocaleKeys.openPdfFailed.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
@@ -186,6 +273,7 @@ class PdfResultScreen extends GetView<PdfResultController> {
   Widget build(BuildContext context) {
     final record = controller.record;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isImages = record.isImageGroup;
 
     return PopScope(
       canPop: false,
@@ -197,7 +285,9 @@ class PdfResultScreen extends GetView<PdfResultController> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            title: Text(LocaleKeys.pdfReady.tr),
+            title: Text(
+              isImages ? LocaleKeys.imagesReady.tr : LocaleKeys.pdfReady.tr,
+            ),
             actions: [
               TextButton(
                 onPressed: _done,
@@ -228,19 +318,23 @@ class PdfResultScreen extends GetView<PdfResultController> {
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                width: 72,
-                                height: 72,
-                                decoration: BoxDecoration(
-                                  color: AppColors.brand.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(20),
+                              if (isImages)
+                                _ImageGroupPreview(record: record)
+                              else
+                                Container(
+                                  width: 72,
+                                  height: 72,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.brand.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Icon(
+                                    Icons.check_circle_rounded,
+                                    color: AppColors.brand,
+                                    size: 40,
+                                  ),
                                 ),
-                                child: const Icon(
-                                  Icons.check_circle_rounded,
-                                  color: AppColors.brand,
-                                  size: 40,
-                                ),
-                              ),
                               const SizedBox(height: 18),
                               Text(
                                 record.name,
@@ -252,10 +346,15 @@ class PdfResultScreen extends GetView<PdfResultController> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                LocaleKeys.pdfMeta.trParams({
-                                  'size': record.formattedSize,
-                                  'pages': '${record.pageCount}',
-                                }),
+                                isImages
+                                    ? LocaleKeys.imageMeta.trParams({
+                                        'size': record.formattedSize,
+                                        'count': '${record.pageCount}',
+                                      })
+                                    : LocaleKeys.pdfMeta.trParams({
+                                        'size': record.formattedSize,
+                                        'pages': '${record.pageCount}',
+                                      }),
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context)
                                     .textTheme
@@ -284,7 +383,11 @@ class PdfResultScreen extends GetView<PdfResultController> {
                     child: FilledButton.icon(
                       onPressed: () => _share(record),
                       icon: const Icon(Icons.ios_share_rounded),
-                      label: Text(LocaleKeys.sharePdf.tr),
+                      label: Text(
+                        isImages
+                            ? LocaleKeys.shareImages.tr
+                            : LocaleKeys.sharePdf.tr,
+                      ),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.brand,
                         shape: RoundedRectangleBorder(
@@ -299,8 +402,16 @@ class PdfResultScreen extends GetView<PdfResultController> {
                     height: 52,
                     child: OutlinedButton.icon(
                       onPressed: () => _save(record),
-                      icon: const Icon(Icons.save_alt_rounded),
-                      label: Text(LocaleKeys.savePdf.tr),
+                      icon: Icon(
+                        isImages
+                            ? Icons.photo_library_outlined
+                            : Icons.save_alt_rounded,
+                      ),
+                      label: Text(
+                        isImages
+                            ? LocaleKeys.saveToGallery.tr
+                            : LocaleKeys.savePdf.tr,
+                      ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.brand,
                         side: const BorderSide(color: AppColors.brand),
@@ -317,7 +428,11 @@ class PdfResultScreen extends GetView<PdfResultController> {
                     child: TextButton.icon(
                       onPressed: () => _open(record),
                       icon: const Icon(Icons.open_in_new_rounded),
-                      label: Text(LocaleKeys.openPdf.tr),
+                      label: Text(
+                        isImages
+                            ? LocaleKeys.openImages.tr
+                            : LocaleKeys.openPdf.tr,
+                      ),
                     ),
                   ),
                 ],
@@ -325,6 +440,74 @@ class PdfResultScreen extends GetView<PdfResultController> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ImageGroupPreview extends StatelessWidget {
+  const _ImageGroupPreview({required this.record});
+
+  final ConversionRecord record;
+
+  @override
+  Widget build(BuildContext context) {
+    final files = ConversionStorage.resolveFiles(record);
+    final previewCount = files.length.clamp(0, 4);
+
+    return SizedBox(
+      height: 120,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          for (var i = 0; i < previewCount; i++)
+            Transform.translate(
+              offset: Offset((i - (previewCount - 1) / 2) * 18, i * 2.0),
+              child: Transform.rotate(
+                angle: (i - (previewCount - 1) / 2) * 0.08,
+                child: Container(
+                  width: 72,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white, width: 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.12),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    image: DecorationImage(
+                      image: FileImage(files[i]),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          Positioned(
+            right: 8,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.brand,
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                LocaleKeys.imageGroupLabel.trParams({
+                  'count': '${record.pageCount}',
+                }),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

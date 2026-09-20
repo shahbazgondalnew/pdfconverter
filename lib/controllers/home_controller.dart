@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../controllers/excel_to_pdf_controller.dart';
 import '../controllers/html_to_pdf_controller.dart';
 import '../controllers/image_to_pdf_controller.dart';
+import '../controllers/pdf_to_image_controller.dart';
 import '../controllers/ppt_to_pdf_controller.dart';
 import '../controllers/scan_to_pdf_controller.dart';
 import '../controllers/text_to_pdf_controller.dart';
@@ -248,6 +249,9 @@ class HomeController extends GetxController {
         return;
       case ToolId.scanToPdf:
         ScanToPdfController.startFromHome();
+        return;
+      case ToolId.pdfToImage:
+        PdfToImageController.startFromHome();
         return;
       default:
         Get.snackbar(

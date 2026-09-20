@@ -175,4 +175,19 @@ abstract final class LocaleKeys {
   static const pptSlides = 'ppt_slides';
   static const slideLabel = 'slide_label';
   static const pptBackgroundHint = 'ppt_background_hint';
+
+  // PDF to Image
+  static const addPdfFiles = 'add_pdf_files';
+  static const pickPdfFailed = 'pick_pdf_failed';
+  static const saveImages = 'save_images';
+  static const convertingImages = 'converting_images';
+  static const savingImages = 'saving_images';
+  static const imagesReady = 'images_ready';
+  static const saveToGallery = 'save_to_gallery';
+  static const shareImages = 'share_images';
+  static const openImages = 'open_images';
+  static const imageMeta = 'image_meta';
+  static const gallerySaveSuccess = 'gallery_save_success';
+  static const gallerySaveFailed = 'gallery_save_failed';
+  static const imageGroupLabel = 'image_group_label';
 }

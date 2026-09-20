@@ -13,6 +13,8 @@ abstract final class AppRoutes {
   static const htmlEdit = '/tools/html-edit';
   static const pptToPdf = '/tools/ppt-to-pdf';
   static const pptEdit = '/tools/ppt-edit';
+  static const pdfToImage = '/tools/pdf-to-image';
+  static const pdfToImageEdit = '/tools/pdf-to-image-edit';
   static const pdfProgress = '/tools/pdf-progress';
   static const pdfResult = '/tools/pdf-result';
 }

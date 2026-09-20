@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../bindings/excel_to_pdf_binding.dart';
 import '../bindings/html_to_pdf_binding.dart';
 import '../bindings/image_to_pdf_binding.dart';
+import '../bindings/pdf_to_image_binding.dart';
 import '../bindings/ppt_to_pdf_binding.dart';
 import '../bindings/scan_to_pdf_binding.dart';
 import '../bindings/text_to_pdf_binding.dart';
@@ -16,6 +17,8 @@ import '../screens/tools/html_to_pdf/html_to_pdf_screen.dart';
 import '../screens/tools/image_to_pdf/image_edit_screen.dart';
 import '../screens/tools/image_to_pdf/image_to_pdf_screen.dart';
 import '../screens/tools/pdf_result/pdf_conversion_screens.dart';
+import '../screens/tools/pdf_to_image/pdf_to_image_edit_screen.dart';
+import '../screens/tools/pdf_to_image/pdf_to_image_screen.dart';
 import '../screens/tools/ppt_to_pdf/ppt_edit_screen.dart';
 import '../screens/tools/ppt_to_pdf/ppt_to_pdf_screen.dart';
 import '../screens/tools/scan_to_pdf/scan_to_pdf_screen.dart';
@@ -95,6 +98,16 @@ class AppPages {
       name: AppRoutes.pptEdit,
       page: () => const PptEditScreen(),
       binding: PptEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pdfToImage,
+      page: () => const PdfToImageScreen(),
+      binding: PdfToImageBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pdfToImageEdit,
+      page: () => const PdfToImageEditScreen(),
+      binding: PdfToImageEditBinding(),
     ),
     GetPage(
       name: AppRoutes.pdfProgress,
