@@ -45,12 +45,14 @@ class ToolItem {
     required this.titleKey,
     required this.icon,
     required this.color,
+    this.comingSoon = false,
   });
 
   final ToolId id;
   final String titleKey;
   final IconData icon;
   final Color color;
+  final bool comingSoon;
 }
 
 class ToolSection {

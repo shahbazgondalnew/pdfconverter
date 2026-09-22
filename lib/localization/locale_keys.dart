@@ -69,6 +69,7 @@ abstract final class LocaleKeys {
   static const toolUnlockPdf = 'tool_unlock_pdf';
   static const toolSignPdf = 'tool_sign_pdf';
   static const toolComingSoon = 'tool_coming_soon';
+  static const comingSoon = 'coming_soon';
 
   // Image to PDF flow
   static const addImages = 'add_images';

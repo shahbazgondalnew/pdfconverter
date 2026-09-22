@@ -228,7 +228,7 @@ class _ToolSectionView extends StatelessWidget {
               crossAxisCount: 3,
               mainAxisSpacing: 12,
               crossAxisSpacing: 12,
-              childAspectRatio: 0.88,
+              childAspectRatio: 0.78,
             ),
             itemBuilder: (context, index) {
               final tool = section.tools[index];
@@ -264,6 +264,7 @@ class _ToolTileState extends State<_ToolTile> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final tool = widget.tool;
+    final comingSoon = tool.comingSoon;
 
     return AnimatedScale(
       scale: _pressed ? 0.94 : 1,
@@ -294,39 +295,69 @@ class _ToolTileState extends State<_ToolTile> {
                       ),
                     ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          tool.color.withValues(alpha: 0.22),
-                          tool.color.withValues(alpha: 0.08),
-                        ],
-                      ),
-                    ),
-                    child: Icon(tool.icon, color: tool.color, size: 24),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    tool.titleKey.tr,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          height: 1.2,
+            child: Opacity(
+              opacity: comingSoon ? 0.78 : 1,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 12,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            tool.color.withValues(alpha: 0.22),
+                            tool.color.withValues(alpha: 0.08),
+                          ],
                         ),
-                  ),
-                ],
+                      ),
+                      child: Icon(tool.icon, color: tool.color, size: 24),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      tool.titleKey.tr,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            height: 1.15,
+                          ),
+                    ),
+                    if (comingSoon) ...[
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.brand,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          LocaleKeys.comingSoon.tr,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w700,
+                            height: 1.1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ),

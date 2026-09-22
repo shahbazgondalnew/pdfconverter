@@ -89,24 +89,28 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolPdfToText,
           icon: Icons.text_snippet_outlined,
           color: Color(0xFF00897B),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.pdfToExcel,
           titleKey: LocaleKeys.toolPdfToExcel,
           icon: Icons.grid_on_outlined,
           color: Color(0xFF2E7D32),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.pdfToPpt,
           titleKey: LocaleKeys.toolPdfToPpt,
           icon: Icons.present_to_all_outlined,
           color: Color(0xFFD84315),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.pdfToHtml,
           titleKey: LocaleKeys.toolPdfToHtml,
           icon: Icons.language,
           color: Color(0xFF0277BD),
+          comingSoon: true,
         ),
       ],
     ),
@@ -160,12 +164,14 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolPageNumbers,
           icon: Icons.format_list_numbered,
           color: Color(0xFF1565C0),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.watermark,
           titleKey: LocaleKeys.toolWatermark,
           icon: Icons.branding_watermark_outlined,
           color: Color(0xFF455A64),
+          comingSoon: true,
         ),
       ],
     ),
@@ -177,36 +183,42 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolPngToJpg,
           icon: Icons.swap_horiz,
           color: Color(0xFFF4511E),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.jpgToPng,
           titleKey: LocaleKeys.toolJpgToPng,
           icon: Icons.image_aspect_ratio,
           color: Color(0xFF7CB342),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.webpToPng,
           titleKey: LocaleKeys.toolWebpToPng,
           icon: Icons.transform,
           color: Color(0xFF546E7A),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.heicToJpg,
           titleKey: LocaleKeys.toolHeicToJpg,
           icon: Icons.photo_camera_back_outlined,
           color: Color(0xFFEF6C00),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.compressImage,
           titleKey: LocaleKeys.toolCompressImage,
           icon: Icons.photo_size_select_large,
           color: Color(0xFF009688),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.cropImage,
           titleKey: LocaleKeys.toolCropImage,
           icon: Icons.crop,
           color: Color(0xFF7B1FA2),
+          comingSoon: true,
         ),
       ],
     ),
@@ -218,24 +230,38 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolLockPdf,
           icon: Icons.lock_outline,
           color: Color(0xFFC62828),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.unlockPdf,
           titleKey: LocaleKeys.toolUnlockPdf,
           icon: Icons.lock_open,
           color: Color(0xFF2E7D32),
+          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.signPdf,
           titleKey: LocaleKeys.toolSignPdf,
           icon: Icons.draw_outlined,
           color: Color(0xFF283593),
+          comingSoon: true,
         ),
       ],
     ),
   ];
 
   void onToolTap(ToolItem tool) {
+    if (tool.comingSoon) {
+      Get.snackbar(
+        tool.titleKey.tr,
+        LocaleKeys.toolComingSoon.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+        duration: const Duration(seconds: 2),
+      );
+      return;
+    }
+
     switch (tool.id) {
       case ToolId.imageToPdf:
         ImageToPdfController.startFromHome();
