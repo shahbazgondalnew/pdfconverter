@@ -62,29 +62,65 @@ class HistoryScreen extends GetView<HistoryController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 12, 12, 8),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        LocaleKeys.historyTitle.tr,
-                        style: textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.6,
+                padding: const EdgeInsets.fromLTRB(20, 12, 8, 8),
+                child: Obx(() {
+                  final selecting = controller.isSelectionMode.value;
+                  return Row(
+                    children: [
+                      if (selecting)
+                        IconButton(
+                          onPressed: controller.exitSelectionMode,
+                          tooltip: LocaleKeys.cancel.tr,
+                          icon: const Icon(Icons.close_rounded),
+                        ),
+                      Expanded(
+                        child: Text(
+                          selecting
+                              ? LocaleKeys.historySelectedCount.trParams({
+                                  'count': '${controller.selectedIds.length}',
+                                })
+                              : LocaleKeys.historyTitle.tr,
+                          style: textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.6,
+                          ),
                         ),
                       ),
-                    ),
-                    Obx(
-                      () => controller.hasConversions
-                          ? IconButton.filledTonal(
-                              onPressed: controller.clearHistory,
-                              tooltip: LocaleKeys.historyClear.tr,
-                              icon: const Icon(Icons.delete_outline_rounded),
-                            )
-                          : const SizedBox.shrink(),
-                    ),
-                  ],
-                ),
+                      if (controller.hasConversions) ...[
+                        if (selecting) ...[
+                          TextButton(
+                            onPressed: controller.allSelected
+                                ? controller.deselectAll
+                                : controller.selectAll,
+                            child: Text(
+                              controller.allSelected
+                                  ? LocaleKeys.deselectAll.tr
+                                  : LocaleKeys.selectAll.tr,
+                            ),
+                          ),
+                          IconButton.filledTonal(
+                            onPressed: controller.hasSelection
+                                ? controller.deleteSelected
+                                : null,
+                            tooltip: LocaleKeys.historyDelete.tr,
+                            icon: const Icon(Icons.delete_outline_rounded),
+                          ),
+                        ] else ...[
+                          IconButton(
+                            onPressed: controller.enterSelectionMode,
+                            tooltip: LocaleKeys.historySelect.tr,
+                            icon: const Icon(Icons.checklist_rounded),
+                          ),
+                          IconButton.filledTonal(
+                            onPressed: controller.clearHistory,
+                            tooltip: LocaleKeys.historyClear.tr,
+                            icon: const Icon(Icons.delete_sweep_outlined),
+                          ),
+                        ],
+                      ],
+                    ],
+                  );
+                }),
               ),
               Expanded(
                 child: Obx(() {
@@ -92,20 +128,34 @@ class HistoryScreen extends GetView<HistoryController> {
                     return _EmptyHistory(isDark: isDark);
                   }
 
+                  final selecting = controller.isSelectionMode.value;
+
                   return ListView.separated(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 110),
+                    padding: EdgeInsets.fromLTRB(
+                      16,
+                      8,
+                      16,
+                      selecting ? 120 : 110,
+                    ),
                     itemCount: controller.records.length,
                     separatorBuilder: (_, _) => const SizedBox(height: 10),
                     itemBuilder: (context, index) {
                       final record = controller.records[index];
+                      final selected = controller.isSelected(record.id);
                       return Material(
                         color: isDark ? AppColors.darkSurface : Colors.white,
                         borderRadius: BorderRadius.circular(18),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(18),
                           onTap: () => controller.openRecord(record),
-                          child: Container(
+                          onLongPress: selecting
+                              ? null
+                              : () => controller.enterSelectionMode(
+                                    initialId: record.id,
+                                  ),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 180),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 14,
                               vertical: 14,
@@ -113,13 +163,32 @@ class HistoryScreen extends GetView<HistoryController> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(18),
                               border: Border.all(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.06)
-                                    : const Color(0xFFEEDFDF),
+                                color: selected
+                                    ? AppColors.brand
+                                    : isDark
+                                        ? Colors.white.withValues(alpha: 0.06)
+                                        : const Color(0xFFEEDFDF),
+                                width: selected ? 1.6 : 1,
                               ),
+                              color: selected
+                                  ? AppColors.brand.withValues(alpha: 0.08)
+                                  : null,
                             ),
                             child: Row(
                               children: [
+                                if (selecting) ...[
+                                  Icon(
+                                    selected
+                                        ? Icons.check_circle_rounded
+                                        : Icons.circle_outlined,
+                                    color: selected
+                                        ? AppColors.brand
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                  ),
+                                  const SizedBox(width: 10),
+                                ],
                                 _HistoryThumb(record: record),
                                 const SizedBox(width: 12),
                                 Expanded(
@@ -141,7 +210,8 @@ class HistoryScreen extends GetView<HistoryController> {
                                             ? '${_typeLabel(record.conversionType)} · ${LocaleKeys.imageGroupLabel.trParams({'count': '${record.pageCount}'})} · ${record.formattedSize}'
                                             : '${_typeLabel(record.conversionType)} · ${LocaleKeys.pdfMeta.trParams({
                                                   'size': record.formattedSize,
-                                                  'pages': '${record.pageCount}',
+                                                  'pages':
+                                                      '${record.pageCount}',
                                                 })}',
                                         style: textTheme.bodySmall?.copyWith(
                                           color: Theme.of(context)
@@ -152,29 +222,42 @@ class HistoryScreen extends GetView<HistoryController> {
                                     ],
                                   ),
                                 ),
-                                if (record.isImageGroup)
+                                if (!selecting) ...[
+                                  if (record.isImageGroup)
+                                    IconButton(
+                                      tooltip: LocaleKeys.saveToGallery.tr,
+                                      onPressed: () => controller
+                                          .promptSaveToGallery(record),
+                                      icon: const Icon(
+                                        Icons.photo_library_outlined,
+                                      ),
+                                    )
+                                  else
+                                    IconButton(
+                                      tooltip: record.isWordFile
+                                          ? LocaleKeys.saveWord.tr
+                                          : LocaleKeys.savePdf.tr,
+                                      onPressed: () =>
+                                          controller.downloadRecord(record),
+                                      icon: const Icon(Icons.download_rounded),
+                                    ),
                                   IconButton(
-                                    tooltip: LocaleKeys.saveToGallery.tr,
+                                    tooltip: record.isImageGroup
+                                        ? LocaleKeys.shareImages.tr
+                                        : LocaleKeys.sharePdf.tr,
                                     onPressed: () =>
-                                        controller.promptSaveToGallery(record),
+                                        controller.shareRecord(record),
+                                    icon: const Icon(Icons.ios_share_rounded),
+                                  ),
+                                  IconButton(
+                                    tooltip: LocaleKeys.historyDelete.tr,
+                                    onPressed: () =>
+                                        controller.deleteRecord(record),
                                     icon: const Icon(
-                                      Icons.photo_library_outlined,
+                                      Icons.delete_outline_rounded,
                                     ),
                                   ),
-                                IconButton(
-                                  tooltip: record.isImageGroup
-                                      ? LocaleKeys.shareImages.tr
-                                      : LocaleKeys.sharePdf.tr,
-                                  onPressed: () =>
-                                      controller.shareRecord(record),
-                                  icon: const Icon(Icons.ios_share_rounded),
-                                ),
-                                IconButton(
-                                  tooltip: LocaleKeys.deleteImage.tr,
-                                  onPressed: () =>
-                                      controller.deleteRecord(record),
-                                  icon: const Icon(Icons.delete_outline_rounded),
-                                ),
+                                ],
                               ],
                             ),
                           ),
@@ -184,6 +267,37 @@ class HistoryScreen extends GetView<HistoryController> {
                   );
                 }),
               ),
+              Obx(() {
+                if (!controller.isSelectionMode.value ||
+                    !controller.hasSelection) {
+                  return const SizedBox.shrink();
+                }
+                return SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: FilledButton.icon(
+                        onPressed: controller.deleteSelected,
+                        icon: const Icon(Icons.delete_outline_rounded),
+                        label: Text(
+                          LocaleKeys.historyDeleteSelected.trParams({
+                            'count': '${controller.selectedIds.length}',
+                          }),
+                        ),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppColors.brand,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
             ],
           ),
         ),

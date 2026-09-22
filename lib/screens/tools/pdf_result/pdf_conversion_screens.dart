@@ -12,6 +12,7 @@ import '../../../localization/locale_keys.dart';
 import '../../../models/conversion_record.dart';
 import '../../../routes/app_routes.dart';
 import '../../../services/conversion_storage.dart';
+import '../../../services/document_save_service.dart';
 import '../../../services/gallery_save_service.dart';
 import '../../../theme/app_colors.dart';
 import '../../../widgets/app_background.dart';
@@ -232,7 +233,17 @@ class PdfResultScreen extends GetView<PdfResultController> {
       await _saveToGallery(record);
       return;
     }
-    await _share(record);
+
+    final absolutePath = ConversionStorage.resolvePath(record.path);
+    final file = File(absolutePath);
+    await const DocumentSaveService().downloadFile(
+      file: file,
+      displayName: record.name,
+      mimeType: record.shareMimeType,
+      snackTitle: record.isWordFile
+          ? LocaleKeys.saveWord
+          : LocaleKeys.savePdf,
+    );
   }
 
   Future<void> _open(ConversionRecord record) async {
@@ -423,7 +434,7 @@ class PdfResultScreen extends GetView<PdfResultController> {
                       icon: Icon(
                         isImages
                             ? Icons.photo_library_outlined
-                            : Icons.save_alt_rounded,
+                            : Icons.download_rounded,
                       ),
                       label: Text(
                         isImages

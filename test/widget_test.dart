@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pdfconverter/controllers/theme_controller.dart';
 import 'package:pdfconverter/localization/app_translations.dart';
@@ -11,12 +12,14 @@ import 'package:pdfconverter/services/conversion_storage.dart';
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     await ConversionStorage.init(forTest: true);
   });
 
   setUp(() {
     Get.reset();
     Get.testMode = true;
+    SharedPreferences.setMockInitialValues({});
   });
 
   tearDown(() {
@@ -24,7 +27,9 @@ void main() {
   });
 
   Future<void> pumpApp(WidgetTester tester) async {
-    Get.put(ThemeController(), permanent: true);
+    final themeController = ThemeController();
+    await themeController.load();
+    Get.put(themeController, permanent: true);
     await tester.pumpWidget(const MyApp());
     Get.updateLocale(TranslationService.fallbackLocale);
     await tester.pumpAndSettle();
@@ -58,30 +63,43 @@ void main() {
 
     await tester.tap(find.text('Profile'));
     await tester.pumpAndSettle();
-    expect(find.text('Guest User'), findsOneWidget);
+    expect(find.text('AllConvert'), findsOneWidget);
+    expect(find.text('System'), findsOneWidget);
 
     await tester.tap(find.text('Home'));
     await tester.pumpAndSettle();
     expect(find.text('Merge PDF'), findsOneWidget);
   });
 
-  testWidgets('Theme toggles between light and dark', (WidgetTester tester) async {
-    final themeController = Get.put(ThemeController(), permanent: true);
+  testWidgets('Theme defaults to system and can switch modes',
+      (WidgetTester tester) async {
+    final themeController = ThemeController();
+    await themeController.load();
+    Get.put(themeController, permanent: true);
     await tester.pumpWidget(const MyApp());
     Get.updateLocale(TranslationService.fallbackLocale);
     await tester.pumpAndSettle();
 
-    expect(themeController.isDarkMode.value, isFalse);
-    expect(themeController.themeMode, ThemeMode.light);
+    expect(themeController.preference.value, AppThemePreference.system);
+    expect(themeController.themeMode, ThemeMode.system);
 
     await tester.tap(find.text('Profile'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(Switch));
+    await tester.tap(find.text('Dark'));
     await tester.pumpAndSettle();
-
-    expect(themeController.isDarkMode.value, isTrue);
+    expect(themeController.preference.value, AppThemePreference.dark);
     expect(themeController.themeMode, ThemeMode.dark);
+
+    await tester.tap(find.text('Light'));
+    await tester.pumpAndSettle();
+    expect(themeController.preference.value, AppThemePreference.light);
+    expect(themeController.themeMode, ThemeMode.light);
+
+    await tester.tap(find.text('System'));
+    await tester.pumpAndSettle();
+    expect(themeController.preference.value, AppThemePreference.system);
+    expect(themeController.themeMode, ThemeMode.system);
   });
 
   test('Resolves supported device language', () {

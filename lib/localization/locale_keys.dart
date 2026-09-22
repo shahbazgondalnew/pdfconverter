@@ -8,6 +8,12 @@ abstract final class LocaleKeys {
   static const historyTitle = 'history_title';
   static const historyEmpty = 'history_empty';
   static const historyClear = 'history_clear';
+  static const historySelect = 'history_select';
+  static const historyDelete = 'history_delete';
+  static const historyDeleteSelected = 'history_delete_selected';
+  static const historySelectedCount = 'history_selected_count';
+  static const historyDeleteConfirm = 'history_delete_confirm';
+  static const historyClearConfirm = 'history_clear_confirm';
   static const profileTitle = 'profile_title';
   static const guestUser = 'guest_user';
   static const appearance = 'appearance';
@@ -15,6 +21,13 @@ abstract final class LocaleKeys {
   static const themeSubtitle = 'theme_subtitle';
   static const themeLight = 'theme_light';
   static const themeDark = 'theme_dark';
+  static const themeSystem = 'theme_system';
+  static const about = 'about';
+  static const appVersion = 'app_version';
+  static const termsOfUse = 'terms_of_use';
+  static const privacyPolicy = 'privacy_policy';
+  static const rateUs = 'rate_us';
+  static const openLinkFailed = 'open_link_failed';
 
   // Tool sections
   static const sectionConvertToPdf = 'section_convert_to_pdf';
@@ -104,6 +117,8 @@ abstract final class LocaleKeys {
   static const sharePdfText = 'share_pdf_text';
   static const fileMissing = 'file_missing';
   static const openPdfFailed = 'open_pdf_failed';
+  static const fileDownloadSuccess = 'file_download_success';
+  static const fileDownloadFailed = 'file_download_failed';
 
   // Document tools (Word / Excel)
   static const addWordFiles = 'add_word_files';

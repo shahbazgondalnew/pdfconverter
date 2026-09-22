@@ -240,6 +240,19 @@ class PdfToImageController extends GetxController {
       await ConversionStorage.deleteRecord(previousId);
     }
 
+    // Remove render temps that were copied into the history group.
+    for (final page in toSave) {
+      final path = page.path;
+      final stillUsed = storedFiles.any((file) => file.path == path);
+      if (stillUsed) continue;
+      try {
+        final file = File(path);
+        if (await file.exists()) {
+          await file.delete();
+        }
+      } catch (_) {}
+    }
+
     historyRecordId = record.id;
     _reloadHistory();
   }

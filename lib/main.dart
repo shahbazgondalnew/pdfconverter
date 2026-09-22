@@ -14,7 +14,9 @@ import 'theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ConversionStorage.init();
-  Get.put(ThemeController(), permanent: true);
+  final themeController = ThemeController();
+  await themeController.load();
+  Get.put(themeController, permanent: true);
   runApp(const MyApp());
 }
 

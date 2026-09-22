@@ -38,6 +38,7 @@ class ConversionStorage {
 
     _box = await Hive.openBox(_boxName);
     await _migrateAbsolutePaths();
+    await purgeOrphanFiles();
   }
 
   static Directory get filesDirectory {
@@ -109,32 +110,81 @@ class ConversionStorage {
     return records;
   }
 
+  static Set<String> _referencedFileNames() {
+    final names = <String>{};
+    for (final record in getAllRecords()) {
+      for (final stored in record.allPaths) {
+        final name = p.basename(stored);
+        if (name.isNotEmpty) names.add(name);
+      }
+    }
+    return names;
+  }
+
+  static Future<void> _deleteFileQuietly(File file) async {
+    try {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (_) {
+      // Best-effort cleanup; ignore locked/missing files.
+    }
+  }
+
+  /// Deletes every file in [filesDirectory] that is not referenced by Hive.
+  static Future<void> purgeOrphanFiles() async {
+    if (!isReady) return;
+    final referenced = _referencedFileNames();
+    await for (final entity in _filesDir!.list(followLinks: false)) {
+      if (entity is! File) continue;
+      final name = p.basename(entity.path);
+      if (!referenced.contains(name)) {
+        await _deleteFileQuietly(entity);
+      }
+    }
+  }
+
   static Future<void> deleteRecord(String id) async {
     _ensureReady();
     final raw = _box!.get(id);
     if (raw is Map) {
       final record = ConversionRecord.fromMap(raw);
       for (final stored in record.allPaths) {
-        final file = resolveFile(stored);
-        if (await file.exists()) {
-          await file.delete();
-        }
+        await _deleteFileQuietly(resolveFile(stored));
       }
     }
     await _box!.delete(id);
+    await purgeOrphanFiles();
+  }
+
+  static Future<void> deleteRecords(Iterable<String> ids) async {
+    _ensureReady();
+    for (final id in ids) {
+      final raw = _box!.get(id);
+      if (raw is Map) {
+        final record = ConversionRecord.fromMap(raw);
+        for (final stored in record.allPaths) {
+          await _deleteFileQuietly(resolveFile(stored));
+        }
+      }
+      await _box!.delete(id);
+    }
+    await purgeOrphanFiles();
   }
 
   static Future<void> clearAll() async {
     _ensureReady();
-    for (final record in getAllRecords()) {
-      for (final stored in record.allPaths) {
-        final file = resolveFile(stored);
-        if (await file.exists()) {
-          await file.delete();
-        }
-      }
-    }
     await _box!.clear();
+    // Wipe the whole conversions folder so no orphaned temps remain.
+    if (await _filesDir!.exists()) {
+      await for (final entity in _filesDir!.list(followLinks: false)) {
+        try {
+          await entity.delete(recursive: true);
+        } catch (_) {}
+      }
+    } else {
+      await _filesDir!.create(recursive: true);
+    }
   }
 
   /// Rewrite any Hive entries that still store absolute container paths.

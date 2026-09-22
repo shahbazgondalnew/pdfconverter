@@ -9,14 +9,22 @@ import '../localization/locale_keys.dart';
 import '../models/conversion_record.dart';
 import '../routes/app_routes.dart';
 import '../services/conversion_storage.dart';
+import '../services/document_save_service.dart';
 import '../services/gallery_save_service.dart';
 import '../theme/app_colors.dart';
 import 'pdf_to_image_controller.dart';
 
 class HistoryController extends GetxController {
   final records = <ConversionRecord>[].obs;
+  final isSelectionMode = false.obs;
+  final selectedIds = <String>{}.obs;
 
   bool get hasConversions => records.isNotEmpty;
+
+  bool get hasSelection => selectedIds.isNotEmpty;
+
+  bool get allSelected =>
+      records.isNotEmpty && selectedIds.length == records.length;
 
   @override
   void onInit() {
@@ -26,16 +34,112 @@ class HistoryController extends GetxController {
 
   void reload() {
     records.assignAll(ConversionStorage.getAllRecords());
+    selectedIds.removeWhere(
+      (id) => records.every((record) => record.id != id),
+    );
+    if (records.isEmpty) {
+      exitSelectionMode();
+    }
+  }
+
+  void enterSelectionMode({String? initialId}) {
+    isSelectionMode.value = true;
+    selectedIds.clear();
+    if (initialId != null) {
+      selectedIds.add(initialId);
+    }
+    selectedIds.refresh();
+  }
+
+  void exitSelectionMode() {
+    isSelectionMode.value = false;
+    selectedIds.clear();
+  }
+
+  bool isSelected(String id) => selectedIds.contains(id);
+
+  void toggleSelect(String id) {
+    if (selectedIds.contains(id)) {
+      selectedIds.remove(id);
+    } else {
+      selectedIds.add(id);
+    }
+    selectedIds.refresh();
+  }
+
+  void selectAll() {
+    selectedIds
+      ..clear()
+      ..addAll(records.map((record) => record.id));
+    selectedIds.refresh();
+  }
+
+  void deselectAll() {
+    selectedIds.clear();
   }
 
   Future<void> clearHistory() async {
+    final confirmed = await _confirmDelete(
+      title: LocaleKeys.historyClear.tr,
+      message: LocaleKeys.historyClearConfirm.tr,
+    );
+    if (confirmed != true) return;
+
     await ConversionStorage.clearAll();
+    exitSelectionMode();
     reload();
   }
 
   Future<void> deleteRecord(ConversionRecord record) async {
+    final confirmed = await _confirmDelete(
+      title: LocaleKeys.historyDelete.tr,
+      message: LocaleKeys.historyDeleteConfirm.tr,
+    );
+    if (confirmed != true) return;
+
     await ConversionStorage.deleteRecord(record.id);
+    selectedIds.remove(record.id);
     reload();
+  }
+
+  Future<void> deleteSelected() async {
+    if (selectedIds.isEmpty) return;
+
+    final confirmed = await _confirmDelete(
+      title: LocaleKeys.historyDeleteSelected.trParams({
+        'count': '${selectedIds.length}',
+      }),
+      message: LocaleKeys.historyDeleteConfirm.tr,
+    );
+    if (confirmed != true) return;
+
+    final ids = selectedIds.toList(growable: false);
+    await ConversionStorage.deleteRecords(ids);
+    exitSelectionMode();
+    reload();
+  }
+
+  Future<bool?> _confirmDelete({
+    required String title,
+    required String message,
+  }) {
+    return Get.dialog<bool>(
+      AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text(LocaleKeys.cancel.tr),
+          ),
+          FilledButton(
+            onPressed: () => Get.back(result: true),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.brand),
+            child: Text(LocaleKeys.historyDelete.tr),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> shareRecord(ConversionRecord record) async {
@@ -93,6 +197,23 @@ class HistoryController extends GetxController {
         ],
         subject: record.name,
       ),
+    );
+  }
+
+  Future<void> downloadRecord(ConversionRecord record) async {
+    if (record.isImageGroup) {
+      await promptSaveToGallery(record);
+      return;
+    }
+
+    final absolutePath = ConversionStorage.resolvePath(record.path);
+    await const DocumentSaveService().downloadFile(
+      file: File(absolutePath),
+      displayName: record.name,
+      mimeType: record.shareMimeType,
+      snackTitle: record.isWordFile
+          ? LocaleKeys.saveWord
+          : LocaleKeys.savePdf,
     );
   }
 
@@ -196,6 +317,11 @@ class HistoryController extends GetxController {
   }
 
   Future<void> openRecord(ConversionRecord record) async {
+    if (isSelectionMode.value) {
+      toggleSelect(record.id);
+      return;
+    }
+
     if (record.isImageGroup) {
       await PdfToImageController.openFromHistory(record);
       return;

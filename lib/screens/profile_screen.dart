@@ -59,10 +59,10 @@ class ProfileScreen extends GetView<ProfileController> {
                 child: Row(
                   children: [
                     Container(
-                      width: 72,
-                      height: 72,
+                      width: 64,
+                      height: 64,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(18),
                         gradient: const LinearGradient(
                           colors: [AppColors.brand, AppColors.brandDeep],
                         ),
@@ -75,9 +75,9 @@ class ProfileScreen extends GetView<ProfileController> {
                         ],
                       ),
                       child: const Icon(
-                        Icons.person_rounded,
+                        Icons.picture_as_pdf_rounded,
                         color: Colors.white,
-                        size: 36,
+                        size: 30,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -86,14 +86,14 @@ class ProfileScreen extends GetView<ProfileController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            LocaleKeys.guestUser.tr,
+                            'AllConvert',
                             style: textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w800,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            controller.email,
+                            'Image & PDF Converter',
                             style: textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
@@ -115,76 +115,204 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
               const SizedBox(height: 12),
               Obx(() {
-                final isDarkMode = themeController.isDarkMode.value;
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOut,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.06)
-                          : const Color(0xFFEEDFDF),
-                    ),
-                  ),
-                  child: Row(
+                final selected = themeController.preference.value;
+                return _SettingsCard(
+                  isDark: isDark,
+                  child: Column(
                     children: [
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        transitionBuilder: (child, animation) {
-                          return ScaleTransition(
-                            scale: animation,
-                            child: child,
-                          );
-                        },
-                        child: Icon(
-                          isDarkMode
-                              ? Icons.dark_mode_rounded
-                              : Icons.light_mode_rounded,
-                          key: ValueKey(isDarkMode),
-                          color: AppColors.brand,
+                      for (var i = 0;
+                          i < AppThemePreference.values.length;
+                          i++) ...[
+                        if (i > 0) const Divider(height: 1),
+                        _ThemeOptionTile(
+                          preference: AppThemePreference.values[i],
+                          selected: selected == AppThemePreference.values[i],
+                          onTap: () => themeController
+                              .setPreference(AppThemePreference.values[i]),
                         ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              LocaleKeys.darkTheme.tr,
-                              style: textTheme.titleSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              LocaleKeys.themeSubtitle.trParams({
-                                'mode': themeController.themeLabel,
-                              }),
-                              style: textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Switch.adaptive(
-                        value: isDarkMode,
-                        activeThumbColor: Colors.white,
-                        activeTrackColor: AppColors.brand,
-                        onChanged: themeController.toggleTheme,
-                      ),
+                      ],
                     ],
                   ),
                 );
               }),
+              const SizedBox(height: 28),
+              Text(
+                LocaleKeys.about.tr,
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _SettingsCard(
+                isDark: isDark,
+                child: Column(
+                  children: [
+                    Obx(
+                      () => _ProfileTile(
+                        icon: Icons.info_outline_rounded,
+                        title: LocaleKeys.appVersion.tr,
+                        trailingText: controller.versionLabel.value.isEmpty
+                            ? '…'
+                            : controller.versionLabel.value,
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    _ProfileTile(
+                      icon: Icons.description_outlined,
+                      title: LocaleKeys.termsOfUse.tr,
+                      onTap: controller.openTermsOfUse,
+                    ),
+                    const Divider(height: 1),
+                    _ProfileTile(
+                      icon: Icons.privacy_tip_outlined,
+                      title: LocaleKeys.privacyPolicy.tr,
+                      onTap: controller.openPrivacyPolicy,
+                    ),
+                    const Divider(height: 1),
+                    _ProfileTile(
+                      icon: Icons.star_outline_rounded,
+                      title: LocaleKeys.rateUs.tr,
+                      onTap: controller.rateUs,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsCard extends StatelessWidget {
+  const _SettingsCard({
+    required this.isDark,
+    required this.child,
+  });
+
+  final bool isDark;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.06)
+              : const Color(0xFFEEDFDF),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
+class _ThemeOptionTile extends StatelessWidget {
+  const _ThemeOptionTile({
+    required this.preference,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final AppThemePreference preference;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            children: [
+              Icon(preference.icon, color: AppColors.brand),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  preference.label,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Icon(
+                selected
+                    ? Icons.check_circle_rounded
+                    : Icons.circle_outlined,
+                color: selected
+                    ? AppColors.brand
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileTile extends StatelessWidget {
+  const _ProfileTile({
+    required this.icon,
+    required this.title,
+    this.trailingText,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? trailingText;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final tappable = onTap != null;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            children: [
+              Icon(icon, color: AppColors.brand),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  style: textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              if (trailingText != null)
+                Text(
+                  trailingText!,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              else if (tappable)
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
             ],
           ),
         ),
