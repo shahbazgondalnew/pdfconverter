@@ -109,17 +109,17 @@ class PdfToImageController extends GetxController {
   Future<List<PdfSourceFile>> pickPdfFiles() async {
     try {
       isBusy.value = true;
-      final result = await FilePicker.platform.pickFiles(
+      final picked = await FilePicker.pickFiles(
         type: FileType.custom,
         allowMultiple: true,
         allowedExtensions: const ['pdf'],
       );
-      if (result == null || result.files.isEmpty) return const [];
+      if (picked.isEmpty) return const [];
 
       final stamp = DateTime.now().microsecondsSinceEpoch;
       var index = 0;
       final files = <PdfSourceFile>[];
-      for (final file in result.files) {
+      for (final file in picked) {
         final path = file.path;
         if (path == null) continue;
         files.add(

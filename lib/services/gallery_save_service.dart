@@ -28,7 +28,7 @@ class GallerySaveService {
       var saved = 0;
       for (final file in files) {
         if (!await file.exists()) continue;
-        await Gal.putImage(file.path, album: 'PDF Converter');
+        await Gal.putImage(file.path, album: 'AllConvert');
         saved++;
       }
 

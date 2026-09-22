@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -52,19 +51,19 @@ class WordToPdfController extends GetxController {
   Future<void> pickDocuments() async {
     try {
       isBusy.value = true;
-      final result = await FilePicker.platform.pickFiles(
+      final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowMultiple: true,
         allowedExtensions: _extensions,
       );
-      if (result == null || result.files.isEmpty) return;
+      if (files.isEmpty) return;
 
       final stamp = DateTime.now().microsecondsSinceEpoch;
       var index = 0;
-      for (final file in result.files) {
+      for (final file in files) {
         final path = file.path;
         if (path == null) continue;
-        final size = file.size > 0 ? file.size : await File(path).length();
+        final size = file.lengthSync() ?? await file.length();
         final id = '$stamp-${index++}';
         final pages = await WordToPdfService.parsePages(
           path: path,

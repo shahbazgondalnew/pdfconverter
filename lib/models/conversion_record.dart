@@ -6,7 +6,15 @@ enum ConversionType {
   htmlToPdf('html_to_pdf'),
   scanToPdf('scan_to_pdf'),
   pptToPdf('ppt_to_pdf'),
-  pdfToImage('pdf_to_image');
+  pdfToImage('pdf_to_image'),
+  pdfToWord('pdf_to_word'),
+  mergePdf('merge_pdf'),
+  splitPdf('split_pdf'),
+  compressPdf('compress_pdf'),
+  rotatePdf('rotate_pdf'),
+  reorderPdf('reorder_pdf'),
+  deletePagesPdf('delete_pages_pdf'),
+  extractPages('extract_pages');
 
   const ConversionType(this.storageValue);
   final String storageValue;
@@ -18,7 +26,10 @@ enum ConversionType {
     );
   }
 
-  bool get isImageOutput => this == ConversionType.pdfToImage;
+  bool get isImageOutput =>
+      this == ConversionType.pdfToImage || this == ConversionType.extractPages;
+
+  bool get isWordOutput => this == ConversionType.pdfToWord;
 }
 
 class ConversionRecord {
@@ -47,6 +58,26 @@ class ConversionRecord {
   final int pageCount;
 
   bool get isImageGroup => conversionType.isImageOutput;
+
+  bool get isWordFile => conversionType.isWordOutput;
+
+  /// MIME type for share/open of the primary file.
+  String get shareMimeType {
+    if (isImageGroup) {
+      final name = path.toLowerCase();
+      if (name.endsWith('.jpg') || name.endsWith('.jpeg')) {
+        return 'image/jpeg';
+      }
+      if (name.endsWith('.webp')) return 'image/webp';
+      if (name.endsWith('.bmp')) return 'image/bmp';
+      if (name.endsWith('.gif')) return 'image/gif';
+      return 'image/png';
+    }
+    if (isWordFile) {
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    }
+    return 'application/pdf';
+  }
 
   /// All relative filenames for this conversion.
   List<String> get allPaths {

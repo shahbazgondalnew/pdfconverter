@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../components/select_images_to_save_sheet.dart';
 import '../../../controllers/pdf_conversion_controller.dart';
+import '../../../controllers/split_pdf_controller.dart';
 import '../../../localization/locale_keys.dart';
 import '../../../models/conversion_record.dart';
 import '../../../routes/app_routes.dart';
@@ -58,6 +59,8 @@ class PdfProgressScreen extends GetView<PdfProgressController> {
                 final isImageFlow =
                     controller.titleKey.value == LocaleKeys.convertingImages ||
                         controller.titleKey.value == LocaleKeys.savingImages;
+                final isWordFlow =
+                    controller.titleKey.value == LocaleKeys.convertingWord;
 
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +76,9 @@ class PdfProgressScreen extends GetView<PdfProgressController> {
                       child: Icon(
                         isImageFlow
                             ? Icons.image_outlined
-                            : Icons.picture_as_pdf_rounded,
+                            : isWordFlow
+                                ? Icons.description_outlined
+                                : Icons.picture_as_pdf_rounded,
                         size: 42,
                         color: AppColors.brand,
                       ),
@@ -156,10 +161,12 @@ class PdfResultScreen extends GetView<PdfResultController> {
         );
         return;
       }
-      await Share.shareXFiles(
-        existing,
-        subject: record.name,
-        text: LocaleKeys.sharePdfText.trParams({'name': record.name}),
+      await SharePlus.instance.share(
+        ShareParams(
+          files: existing,
+          subject: record.name,
+          text: LocaleKeys.sharePdfText.trParams({'name': record.name}),
+        ),
       );
       return;
     }
@@ -176,10 +183,18 @@ class PdfResultScreen extends GetView<PdfResultController> {
       return;
     }
 
-    await Share.shareXFiles(
-      [XFile(absolutePath, mimeType: 'application/pdf', name: record.name)],
-      subject: record.name,
-      text: LocaleKeys.sharePdfText.trParams({'name': record.name}),
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile(
+            absolutePath,
+            mimeType: record.shareMimeType,
+            name: record.name,
+          ),
+        ],
+        subject: record.name,
+        text: LocaleKeys.sharePdfText.trParams({'name': record.name}),
+      ),
     );
   }
 
@@ -240,8 +255,12 @@ class PdfResultScreen extends GetView<PdfResultController> {
       Get.snackbar(
         record.isImageGroup
             ? LocaleKeys.toolPdfToImage.tr
-            : LocaleKeys.toolImageToPdf.tr,
-        LocaleKeys.openPdfFailed.tr,
+            : record.isWordFile
+                ? LocaleKeys.toolPdfToWord.tr
+                : LocaleKeys.toolImageToPdf.tr,
+        record.isWordFile
+            ? LocaleKeys.openWordFailed.tr
+            : LocaleKeys.openPdfFailed.tr,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(12),
       );
@@ -249,6 +268,15 @@ class PdfResultScreen extends GetView<PdfResultController> {
   }
 
   void _done() {
+    // After a split export, return to the overview so more PDFs can be created.
+    if (controller.record.conversionType == ConversionType.splitPdf &&
+        Get.isRegistered<SplitPdfController>()) {
+      final split = Get.find<SplitPdfController>();
+      if (split.continueAfterResult && split.pages.isNotEmpty) {
+        Get.back();
+        return;
+      }
+    }
     Get.until((route) => route.settings.name == AppRoutes.home);
   }
 
@@ -257,6 +285,7 @@ class PdfResultScreen extends GetView<PdfResultController> {
     final record = controller.record;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isImages = record.isImageGroup;
+    final isWord = record.isWordFile;
 
     return PopScope(
       canPop: false,
@@ -269,7 +298,11 @@ class PdfResultScreen extends GetView<PdfResultController> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             title: Text(
-              isImages ? LocaleKeys.imagesReady.tr : LocaleKeys.pdfReady.tr,
+              isImages
+                  ? LocaleKeys.imagesReady.tr
+                  : isWord
+                      ? LocaleKeys.wordReady.tr
+                      : LocaleKeys.pdfReady.tr,
             ),
             actions: [
               TextButton(
@@ -369,7 +402,9 @@ class PdfResultScreen extends GetView<PdfResultController> {
                       label: Text(
                         isImages
                             ? LocaleKeys.shareImages.tr
-                            : LocaleKeys.sharePdf.tr,
+                            : isWord
+                                ? LocaleKeys.shareWord.tr
+                                : LocaleKeys.sharePdf.tr,
                       ),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.brand,
@@ -393,7 +428,9 @@ class PdfResultScreen extends GetView<PdfResultController> {
                       label: Text(
                         isImages
                             ? LocaleKeys.saveAllImages.tr
-                            : LocaleKeys.savePdf.tr,
+                            : isWord
+                                ? LocaleKeys.saveWord.tr
+                                : LocaleKeys.savePdf.tr,
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: AppColors.brand,
@@ -433,7 +470,9 @@ class PdfResultScreen extends GetView<PdfResultController> {
                       label: Text(
                         isImages
                             ? LocaleKeys.openImages.tr
-                            : LocaleKeys.openPdf.tr,
+                            : isWord
+                                ? LocaleKeys.openWord.tr
+                                : LocaleKeys.openPdf.tr,
                       ),
                     ),
                   ),

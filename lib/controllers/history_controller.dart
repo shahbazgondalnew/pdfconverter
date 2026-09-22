@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../components/select_images_to_save_sheet.dart';
 import '../localization/locale_keys.dart';
 import '../models/conversion_record.dart';
+import '../routes/app_routes.dart';
 import '../services/conversion_storage.dart';
 import '../services/gallery_save_service.dart';
 import '../theme/app_colors.dart';
@@ -63,7 +63,9 @@ class HistoryController extends GetxController {
         reload();
         return;
       }
-      await Share.shareXFiles(existing, subject: record.name);
+      await SharePlus.instance.share(
+        ShareParams(files: existing, subject: record.name),
+      );
       return;
     }
 
@@ -80,9 +82,17 @@ class HistoryController extends GetxController {
       return;
     }
 
-    await Share.shareXFiles(
-      [XFile(absolutePath, mimeType: 'application/pdf', name: record.name)],
-      subject: record.name,
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile(
+            absolutePath,
+            mimeType: record.shareMimeType,
+            name: record.name,
+          ),
+        ],
+        subject: record.name,
+      ),
     );
   }
 
@@ -204,14 +214,7 @@ class HistoryController extends GetxController {
       return;
     }
 
-    final result = await OpenFilex.open(absolutePath);
-    if (result.type != ResultType.done) {
-      Get.snackbar(
-        LocaleKeys.historyTitle.tr,
-        LocaleKeys.openPdfFailed.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
-      );
-    }
+    // Same result screen used after conversion (share / open / save).
+    Get.toNamed(AppRoutes.pdfResult, arguments: record);
   }
 }

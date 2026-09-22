@@ -9,6 +9,39 @@ import '../models/pdf_to_image_models.dart';
 import 'conversion_storage.dart';
 import 'image_to_pdf_service.dart';
 
+enum ExtractImageFormat {
+  png,
+  jpeg,
+  bmp,
+  gif;
+
+  String get extension {
+    switch (this) {
+      case ExtractImageFormat.png:
+        return 'png';
+      case ExtractImageFormat.jpeg:
+        return 'jpg';
+      case ExtractImageFormat.bmp:
+        return 'bmp';
+      case ExtractImageFormat.gif:
+        return 'gif';
+    }
+  }
+
+  String get label {
+    switch (this) {
+      case ExtractImageFormat.png:
+        return 'PNG';
+      case ExtractImageFormat.jpeg:
+        return 'JPG';
+      case ExtractImageFormat.bmp:
+        return 'BMP';
+      case ExtractImageFormat.gif:
+        return 'GIF';
+    }
+  }
+}
+
 class PdfToImageService {
   const PdfToImageService();
 
@@ -78,6 +111,10 @@ class PdfToImageService {
   /// Persists selected page images as one history group.
   Future<ConversionRecord> saveGroup({
     required List<PdfPageImage> pages,
+    ConversionType conversionType = ConversionType.pdfToImage,
+    ExtractImageFormat format = ExtractImageFormat.png,
+    String namePrefix = 'PDF_IMAGES',
+    ConversionProgressCallback? onProgress,
   }) async {
     if (pages.isEmpty) {
       throw StateError('No images to save');
@@ -86,35 +123,49 @@ class PdfToImageService {
     final stamp = DateTime.now();
     final storedPaths = <String>[];
     var totalBytes = 0;
+    final ext = format.extension;
+    final total = pages.length;
 
     for (var i = 0; i < pages.length; i++) {
       final page = pages[i];
-      var bytes = await File(page.path).readAsBytes();
-
-      if (page.rotation % 360 != 0) {
-        final decoded = img.decodeImage(bytes);
-        if (decoded != null) {
-          final rotated = img.copyRotate(decoded, angle: page.rotation);
-          bytes = Uint8List.fromList(img.encodePng(rotated));
-        }
+      final bytes = await File(page.path).readAsBytes();
+      var decoded = img.decodeImage(bytes);
+      if (decoded == null) {
+        throw StateError('Could not decode page ${page.path}');
       }
 
+      if (page.rotation % 360 != 0) {
+        decoded = img.copyRotate(decoded, angle: page.rotation);
+      }
+
+      final encoded = switch (format) {
+        ExtractImageFormat.png => img.encodePng(decoded),
+        ExtractImageFormat.jpeg => img.encodeJpg(decoded, quality: 92),
+        ExtractImageFormat.bmp => img.encodeBmp(decoded),
+        ExtractImageFormat.gif => img.encodeGif(decoded),
+      };
+      final outBytes = Uint8List.fromList(encoded);
+
       final fileName =
-          'PDF_IMG_${stamp.year}${_two(stamp.month)}${_two(stamp.day)}_${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}_$i.png';
+          '${namePrefix}_${stamp.year}${_two(stamp.month)}${_two(stamp.day)}_'
+          '${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}_$i.$ext';
       final output = await ConversionStorage.createOutputFile(fileName);
-      await output.writeAsBytes(bytes, flush: true);
+      await output.writeAsBytes(outBytes, flush: true);
       storedPaths.add(ConversionStorage.toStoredPath(output.path));
       totalBytes += await output.length();
+
+      onProgress?.call(i + 1, total);
+      await Future<void>.delayed(const Duration(milliseconds: 4));
     }
 
     final record = ConversionRecord(
       id: stamp.microsecondsSinceEpoch.toString(),
       name:
-          'PDF_IMAGES_${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}',
+          '${namePrefix}_${_two(stamp.hour)}${_two(stamp.minute)}${_two(stamp.second)}',
       path: storedPaths.first,
       paths: storedPaths,
       sizeBytes: totalBytes,
-      conversionType: ConversionType.pdfToImage,
+      conversionType: conversionType,
       createdAt: stamp,
       pageCount: storedPaths.length,
     );

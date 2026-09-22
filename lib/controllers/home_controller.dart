@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controllers/compress_pdf_controller.dart';
+import '../controllers/delete_pages_pdf_controller.dart';
+import '../controllers/extract_pages_controller.dart';
 import '../controllers/excel_to_pdf_controller.dart';
 import '../controllers/html_to_pdf_controller.dart';
 import '../controllers/image_to_pdf_controller.dart';
+import '../controllers/merge_pdf_controller.dart';
 import '../controllers/pdf_to_image_controller.dart';
+import '../controllers/pdf_to_word_controller.dart';
 import '../controllers/ppt_to_pdf_controller.dart';
+import '../controllers/reorder_pdf_controller.dart';
+import '../controllers/rotate_pdf_controller.dart';
 import '../controllers/scan_to_pdf_controller.dart';
+import '../controllers/split_pdf_controller.dart';
 import '../controllers/text_to_pdf_controller.dart';
 import '../controllers/word_to_pdf_controller.dart';
 import '../localization/locale_keys.dart';
@@ -252,6 +260,30 @@ class HomeController extends GetxController {
         return;
       case ToolId.pdfToImage:
         PdfToImageController.startFromHome();
+        return;
+      case ToolId.pdfToWord:
+        PdfToWordController.startFromHome();
+        return;
+      case ToolId.mergePdf:
+        MergePdfController.startFromHome();
+        return;
+      case ToolId.splitPdf:
+        SplitPdfController.startFromHome();
+        return;
+      case ToolId.compressPdf:
+        CompressPdfController.startFromHome();
+        return;
+      case ToolId.rotatePdf:
+        RotatePdfController.startFromHome();
+        return;
+      case ToolId.reorderPages:
+        ReorderPdfController.startFromHome();
+        return;
+      case ToolId.deletePages:
+        DeletePagesPdfController.startFromHome();
+        return;
+      case ToolId.extractPages:
+        ExtractPagesController.startFromHome();
         return;
       default:
         Get.snackbar(

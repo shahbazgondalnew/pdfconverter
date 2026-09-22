@@ -29,6 +29,22 @@ class HistoryScreen extends GetView<HistoryController> {
         return LocaleKeys.toolPptToPdf.tr;
       case ConversionType.pdfToImage:
         return LocaleKeys.toolPdfToImage.tr;
+      case ConversionType.pdfToWord:
+        return LocaleKeys.toolPdfToWord.tr;
+      case ConversionType.mergePdf:
+        return LocaleKeys.toolMergePdf.tr;
+      case ConversionType.splitPdf:
+        return LocaleKeys.toolSplitPdf.tr;
+      case ConversionType.compressPdf:
+        return LocaleKeys.toolCompressPdf.tr;
+      case ConversionType.rotatePdf:
+        return LocaleKeys.toolRotatePdf.tr;
+      case ConversionType.reorderPdf:
+        return LocaleKeys.toolReorderPages.tr;
+      case ConversionType.deletePagesPdf:
+        return LocaleKeys.toolDeletePages.tr;
+      case ConversionType.extractPages:
+        return LocaleKeys.toolExtractPages.tr;
     }
   }
 
@@ -123,7 +139,10 @@ class HistoryScreen extends GetView<HistoryController> {
                                       Text(
                                         record.isImageGroup
                                             ? '${_typeLabel(record.conversionType)} · ${LocaleKeys.imageGroupLabel.trParams({'count': '${record.pageCount}'})} · ${record.formattedSize}'
-                                            : '${_typeLabel(record.conversionType)} · ${record.formattedSize}',
+                                            : '${_typeLabel(record.conversionType)} · ${LocaleKeys.pdfMeta.trParams({
+                                                  'size': record.formattedSize,
+                                                  'pages': '${record.pageCount}',
+                                                })}',
                                         style: textTheme.bodySmall?.copyWith(
                                           color: Theme.of(context)
                                               .colorScheme
@@ -180,76 +199,78 @@ class _HistoryThumb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!record.isImageGroup) {
-      return Container(
-        width: 46,
-        height: 46,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          color: AppColors.brand.withValues(alpha: 0.12),
-        ),
-        child: const Icon(
-          Icons.picture_as_pdf_rounded,
-          color: AppColors.brand,
-        ),
-      );
-    }
+    if (record.isImageGroup) {
+      final files = ConversionStorage.resolveFiles(record);
+      final first = files.isNotEmpty ? files.first : null;
+      final exists = first != null && first.existsSync();
 
-    final files = ConversionStorage.resolveFiles(record);
-    final first = files.isNotEmpty ? files.first : null;
-    final exists = first != null && first.existsSync();
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(14),
-      child: SizedBox(
-        width: 46,
-        height: 46,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            if (exists)
-              Image.file(
-                first,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => ColoredBox(
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: SizedBox(
+          width: 46,
+          height: 46,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (exists)
+                Image.file(
+                  first,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => ColoredBox(
+                    color: AppColors.brand.withValues(alpha: 0.12),
+                    child: const Icon(
+                      Icons.photo_library_outlined,
+                      color: AppColors.brand,
+                    ),
+                  ),
+                )
+              else
+                ColoredBox(
                   color: AppColors.brand.withValues(alpha: 0.12),
                   child: const Icon(
                     Icons.photo_library_outlined,
                     color: AppColors.brand,
                   ),
                 ),
-              )
-            else
-              ColoredBox(
-                color: AppColors.brand.withValues(alpha: 0.12),
-                child: const Icon(
-                  Icons.photo_library_outlined,
-                  color: AppColors.brand,
-                ),
-              ),
-            if (record.pageCount > 1)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: const EdgeInsets.all(3),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.65),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    '${record.pageCount}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
+              if (record.pageCount > 1)
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    margin: const EdgeInsets.all(3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.65),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      '${record.pageCount}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
+      );
+    }
+
+    return Container(
+      width: 46,
+      height: 46,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: AppColors.brand.withValues(alpha: 0.12),
+      ),
+      child: Icon(
+        record.isWordFile
+            ? Icons.description_outlined
+            : Icons.picture_as_pdf_rounded,
+        color: AppColors.brand,
       ),
     );
   }

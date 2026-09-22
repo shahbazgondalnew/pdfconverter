@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF to Word</title>
+</head>
+<body>
+<script>
+  (function () {
+    function post(msg) {
+      try {
+        if (window.ConverterChannel && ConverterChannel.postMessage) {
+          ConverterChannel.postMessage(JSON.stringify(msg));
+        }
+      } catch (e) {}
+    }
+
+    function fail(err) {
+      post({
+        type: 'error',
+        message: (err && err.message) ? err.message : String(err),
+      });
+    }
+
+    function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.async = false;
+        s.onload = function () { resolve(); };
+        s.onerror = function () { reject(new Error('Failed to load ' + src)); };
+        document.head.appendChild(s);
+      });
+    }
+
+    function blobToBase64(blob) {
+      return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+          var result = reader.result || '';
+          resolve(String(result).split(',')[1] || '');
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function base64ToUint8(base64) {
+      var binary = atob(base64);
+      var bytes = new Uint8Array(binary.length);
+      for (var i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return bytes;
+    }
+
+    async function setupPdfWorker() {
+      if (!window.pdfjsLib) throw new Error('pdf.js failed to load');
+      try {
+        var res = await fetch('js/pdf.worker.min.js');
+        if (!res.ok) throw new Error('worker fetch ' + res.status);
+        var code = await res.text();
+        var url = URL.createObjectURL(new Blob([code], { type: 'application/javascript' }));
+        pdfjsLib.GlobalWorkerOptions.workerSrc = url;
+      } catch (e) {
+        // Last resort: point at relative worker path.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'js/pdf.worker.min.js';
+      }
+    }
+
+    function buildLines(items) {
+      var rows = [];
+      (items || []).forEach(function (item) {
+        if (!item || !item.str || !String(item.str).trim()) return;
+        var y = item.transform ? item.transform[5] : 0;
+        var x = item.transform ? item.transform[4] : 0;
+        var matched = null;
+        for (var i = 0; i < rows.length; i++) {
+          if (Math.abs(rows[i].y - y) < 3.5) {
+            matched = rows[i];
+            break;
+          }
+        }
+        if (!matched) {
+          matched = { y: y, parts: [] };
+          rows.push(matched);
+        }
+        matched.parts.push({ x: x, text: item.str });
+      });
+      rows.sort(function (a, b) { return b.y - a.y; });
+      return rows.map(function (row) {
+        row.parts.sort(function (a, b) { return a.x - b.x; });
+        return row.parts.map(function (p) { return p.text; })
+          .join('')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }).filter(Boolean);
+    }
+
+    async function renderPageImage(page) {
+      var viewport = page.getViewport({ scale: 1.5 });
+      var canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+      var ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      var base64 = dataUrl.split(',')[1] || '';
+      return {
+        bytes: base64ToUint8(base64),
+        widthPx: canvas.width,
+        heightPx: canvas.height,
+      };
+    }
+
+    function getDocxApi() {
+      if (!window.docx) throw new Error('docx library failed to load');
+      return window.docx;
+    }
+
+    async function convertOnePdf(bytes, children, progressBase, progressTotal, api) {
+      var pdf = await pdfjsLib.getDocument({
+        data: bytes,
+        isEvalSupported: false,
+      }).promise;
+      var pageCount = pdf.numPages || 0;
+
+      for (var pageNum = 1; pageNum <= pageCount; pageNum++) {
+        var page = await pdf.getPage(pageNum);
+        var textContent = await page.getTextContent();
+        var lines = buildLines(textContent.items);
+
+        if (pageNum > 1 || children.length > 0) {
+          children.push(new api.Paragraph({
+            children: [],
+            pageBreakBefore: true,
+          }));
+        }
+
+        if (lines.length > 0) {
+          for (var i = 0; i < lines.length; i++) {
+            children.push(new api.Paragraph({
+              spacing: { after: 120 },
+              children: [
+                new api.TextRun({ text: lines[i], font: 'Arial', size: 22 }),
+              ],
+            }));
+          }
+        } else {
+          try {
+            var image = await renderPageImage(page);
+            var maxWidth = 550;
+            var width = maxWidth;
+            var height = Math.max(
+              1,
+              Math.round((image.heightPx / Math.max(1, image.widthPx)) * maxWidth)
+            );
+            children.push(new api.Paragraph({
+              children: [
+                new api.ImageRun({
+                  data: image.bytes,
+                  type: 'jpg',
+                  transformation: { width: width, height: height },
+                }),
+              ],
+            }));
+          } catch (imgErr) {
+            children.push(new api.Paragraph({
+              children: [
+                new api.TextRun({
+                  text: '[Page ' + pageNum + ' could not be converted]',
+                  italics: true,
+                  size: 20,
+                }),
+              ],
+            }));
+          }
+        }
+
+        post({
+          type: 'progress',
+          done: progressBase + pageNum,
+          total: progressTotal,
+        });
+      }
+
+      return pageCount;
+    }
+
+    async function startConversion(pdfBase64List) {
+      try {
+        var api = getDocxApi();
+        if (!pdfBase64List || !pdfBase64List.length) {
+          throw new Error('No PDF data');
+        }
+
+        var grandTotal = 0;
+        var parsed = [];
+        for (var i = 0; i < pdfBase64List.length; i++) {
+          var bytes = base64ToUint8(pdfBase64List[i]);
+          var probe = await pdfjsLib.getDocument({
+            data: bytes,
+            isEvalSupported: false,
+          }).promise;
+          var pages = probe.numPages || 1;
+          grandTotal += pages;
+          parsed.push(bytes);
+          try { probe.destroy(); } catch (e) {}
+        }
+        if (grandTotal < 1) grandTotal = 1;
+
+        var children = [];
+        var offset = 0;
+        for (var j = 0; j < parsed.length; j++) {
+          var count = await convertOnePdf(
+            parsed[j],
+            children,
+            offset,
+            grandTotal,
+            api
+          );
+          offset += count;
+        }
+
+        if (!children.length) {
+          children.push(new api.Paragraph({
+            children: [new api.TextRun({ text: ' ', font: 'Arial', size: 22 })],
+          }));
+        }
+
+        var doc = new api.Document({
+          sections: [{ properties: {}, children: children }],
+        });
+        var blob = await api.Packer.toBlob(doc);
+        var out = await blobToBase64(blob);
+        if (!out) throw new Error('Empty Word output');
+        post({ type: 'done', data: out, pages: grandTotal });
+      } catch (err) {
+        fail(err);
+      }
+    }
+
+    // Fire-and-forget wrapper so WKWebView never has to clone a Promise result.
+    window.startConversion = function (pdfBase64List) {
+      Promise.resolve()
+        .then(function () { return startConversion(pdfBase64List); })
+        .catch(fail);
+      return 0;
+    };
+
+    async function boot() {
+      try {
+        await loadScript('js/pdf.min.js');
+        await loadScript('js/docx.umd.js');
+        await setupPdfWorker();
+        if (!window.pdfjsLib) throw new Error('pdf.js failed to load');
+        if (!window.docx) throw new Error('docx failed to load');
+        post({ type: 'ready' });
+      } catch (err) {
+        fail(err);
+      }
+    }
+
+    boot();
+  })();
+</script>
+</body>
+</html>

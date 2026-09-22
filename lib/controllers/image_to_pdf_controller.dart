@@ -116,13 +116,13 @@ class ImageToPdfController extends GetxController {
   }
 
   Future<void> _pickFromFiles() async {
-    final result = await FilePicker.platform.pickFiles(
+    final files = await FilePicker.pickFiles(
       type: FileType.custom,
       allowMultiple: true,
       allowedExtensions: const ['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'],
     );
-    if (result == null || result.files.isEmpty) return;
-    final paths = result.files
+    if (files.isEmpty) return;
+    final paths = files
         .where((file) => file.path != null)
         .map((file) => file.path!);
     addImagePaths(paths);

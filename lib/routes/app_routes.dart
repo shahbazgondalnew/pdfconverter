@@ -15,6 +15,17 @@ abstract final class AppRoutes {
   static const pptEdit = '/tools/ppt-edit';
   static const pdfToImage = '/tools/pdf-to-image';
   static const pdfToImageEdit = '/tools/pdf-to-image-edit';
+  static const pdfToWord = '/tools/pdf-to-word';
+  static const mergePdf = '/tools/merge-pdf';
+  static const mergePdfEdit = '/tools/merge-pdf-edit';
+  static const splitPdf = '/tools/split-pdf';
+  static const splitPdfEdit = '/tools/split-pdf-edit';
+  static const compressPdf = '/tools/compress-pdf';
+  static const compressPdfEdit = '/tools/compress-pdf-edit';
+  static const rotatePdf = '/tools/rotate-pdf';
+  static const reorderPdf = '/tools/reorder-pdf';
+  static const deletePagesPdf = '/tools/delete-pages-pdf';
+  static const extractPages = '/tools/extract-pages';
   static const pdfProgress = '/tools/pdf-progress';
   static const pdfResult = '/tools/pdf-result';
 }

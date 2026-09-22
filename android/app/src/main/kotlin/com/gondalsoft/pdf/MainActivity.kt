@@ -1,4 +1,4 @@
-package com.example.pdfconverter
+package com.gondalsoft.pdf
 
 import io.flutter.embedding.android.FlutterActivity
 

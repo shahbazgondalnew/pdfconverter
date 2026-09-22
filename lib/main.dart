@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'PDF Converter',
+      title: 'AllConvert – Image & PDF Converter',
       debugShowCheckedModeBanner: false,
       initialBinding: InitialBinding(),
       translations: AppTranslations(),

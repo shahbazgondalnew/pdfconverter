@@ -27,13 +27,21 @@ class HomeScreen extends GetView<HomeController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'PDF Converter',
+                  'AllConvert',
                   style: textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.6,
                   ),
                 ),
                 const SizedBox(height: 6),
+                Text(
+                  'Image & PDF Converter',
+                  style: textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
                 Text(
                   LocaleKeys.homeSubtitle.tr,
                   style: textTheme.bodyLarge?.copyWith(
@@ -136,7 +144,7 @@ class _HeroBannerState extends State<_HeroBanner>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'PDF Converter',
+                      'AllConvert',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,
@@ -145,7 +153,7 @@ class _HeroBannerState extends State<_HeroBanner>
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      LocaleKeys.homeTitle.tr,
+                      'Image & PDF Converter',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Colors.white.withValues(alpha: 0.88),
                             fontWeight: FontWeight.w500,

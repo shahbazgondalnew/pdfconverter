@@ -196,4 +196,68 @@ abstract final class LocaleKeys {
   static const gallerySaveSuccess = 'gallery_save_success';
   static const gallerySaveFailed = 'gallery_save_failed';
   static const imageGroupLabel = 'image_group_label';
+
+  // PDF to Word
+  static const selectedPdfFiles = 'selected_pdf_files';
+  static const noPdfSelected = 'no_pdf_selected';
+  static const createWord = 'create_word';
+  static const convertingWord = 'converting_word';
+  static const wordReady = 'word_ready';
+  static const shareWord = 'share_word';
+  static const saveWord = 'save_word';
+  static const openWord = 'open_word';
+  static const openWordFailed = 'open_word_failed';
+
+  // Merge PDF
+  static const selectedPages = 'selected_pages';
+  static const noPagesSelected = 'no_pages_selected';
+  static const mergePdfAction = 'merge_pdf_action';
+  static const mergingPdf = 'merging_pdf';
+
+  // Split PDF
+  static const splitSelectPagesHint = 'split_select_pages_hint';
+  static const splitCreatePdf = 'split_create_pdf';
+  static const splitCreatePdfCount = 'split_create_pdf_count';
+  static const splittingPdf = 'splitting_pdf';
+  static const splitCreatedCount = 'split_created_count';
+
+  // Compress PDF
+  static const compressPdfAction = 'compress_pdf_action';
+  static const compressingPdf = 'compressing_pdf';
+  static const compressLevel = 'compress_level';
+  static const compressLevelHint = 'compress_level_hint';
+  static const compressLow = 'compress_low';
+  static const compressMedium = 'compress_medium';
+  static const compressHigh = 'compress_high';
+  static const compressLowHint = 'compress_low_hint';
+  static const compressMediumHint = 'compress_medium_hint';
+  static const compressHighHint = 'compress_high_hint';
+
+  // Rotate PDF
+  static const rotatePdfAction = 'rotate_pdf_action';
+  static const rotatingPdf = 'rotating_pdf';
+  static const rotateAll = 'rotate_all';
+  static const rotateAllHint = 'rotate_all_hint';
+  static const rotatePageHint = 'rotate_page_hint';
+
+  // Reorder PDF
+  static const reorderPdfAction = 'reorder_pdf_action';
+  static const reorderingPdf = 'reordering_pdf';
+  static const reorderPagesHint = 'reorder_pages_hint';
+  static const reorderPosition = 'reorder_position';
+
+  // Delete pages
+  static const deletePagesSelectHint = 'delete_pages_select_hint';
+  static const deletePagesKeepOne = 'delete_pages_keep_one';
+  static const deletePagesMarked = 'delete_pages_marked';
+  static const deleteMarkedPages = 'delete_marked_pages';
+  static const deletePagesSave = 'delete_pages_save';
+  static const deletingPagesPdf = 'deleting_pages_pdf';
+
+  // Extract pages
+  static const extractPagesSelectHint = 'extract_pages_select_hint';
+  static const extractImageFormat = 'extract_image_format';
+  static const extractPagesSave = 'extract_pages_save';
+  static const extractPagesSaveCount = 'extract_pages_save_count';
+  static const extractingPages = 'extracting_pages';
 }
