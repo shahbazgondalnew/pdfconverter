@@ -14,7 +14,9 @@ enum ConversionType {
   rotatePdf('rotate_pdf'),
   reorderPdf('reorder_pdf'),
   deletePagesPdf('delete_pages_pdf'),
-  extractPages('extract_pages');
+  extractPages('extract_pages'),
+  pageNumbersPdf('page_numbers_pdf'),
+  watermarkPdf('watermark_pdf');
 
   const ConversionType(this.storageValue);
   final String storageValue;

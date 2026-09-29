@@ -26,6 +26,10 @@ abstract final class AppRoutes {
   static const reorderPdf = '/tools/reorder-pdf';
   static const deletePagesPdf = '/tools/delete-pages-pdf';
   static const extractPages = '/tools/extract-pages';
+  static const pageNumbersPdf = '/tools/page-numbers-pdf';
+  static const pageNumbersPdfEdit = '/tools/page-numbers-pdf-edit';
+  static const watermarkPdf = '/tools/watermark-pdf';
+  static const watermarkPdfEdit = '/tools/watermark-pdf-edit';
   static const pdfProgress = '/tools/pdf-progress';
   static const pdfResult = '/tools/pdf-result';
 }

@@ -45,6 +45,10 @@ class HistoryScreen extends GetView<HistoryController> {
         return LocaleKeys.toolDeletePages.tr;
       case ConversionType.extractPages:
         return LocaleKeys.toolExtractPages.tr;
+      case ConversionType.pageNumbersPdf:
+        return LocaleKeys.toolPageNumbers.tr;
+      case ConversionType.watermarkPdf:
+        return LocaleKeys.toolWatermark.tr;
     }
   }
 

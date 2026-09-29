@@ -5,26 +5,32 @@ import '../localization/locale_keys.dart';
 import '../models/conversion_record.dart';
 import '../models/document_models.dart';
 import '../models/image_to_pdf_models.dart';
+import '../models/page_number_models.dart';
 import '../models/pdf_to_image_models.dart';
+import '../models/watermark_models.dart';
 import '../routes/app_routes.dart';
 import '../services/excel_to_pdf_service.dart';
 import '../services/html_to_pdf_service.dart';
 import '../services/image_to_pdf_service.dart';
 import '../services/merge_pdf_service.dart';
+import '../services/page_numbers_pdf_service.dart';
 import '../services/pdf_to_image_service.dart';
 import '../services/pdf_to_word_service.dart';
 import '../services/ppt_to_pdf_service.dart';
 import '../services/text_to_pdf_service.dart';
+import '../services/watermark_pdf_service.dart';
 import '../services/word_to_pdf_service.dart';
 import 'compress_pdf_controller.dart';
 import 'delete_pages_pdf_controller.dart';
 import 'extract_pages_controller.dart';
 import 'history_controller.dart';
 import 'merge_pdf_controller.dart';
+import 'page_numbers_pdf_controller.dart';
 import 'pdf_to_image_controller.dart';
 import 'reorder_pdf_controller.dart';
 import 'rotate_pdf_controller.dart';
 import 'split_pdf_controller.dart';
+import 'watermark_pdf_controller.dart';
 
 class PdfProgressController extends GetxController {
   final total = 0.obs;
@@ -252,6 +258,55 @@ class PdfProgressController extends GetxController {
           );
           completed.value = total.value;
           _finishWithResult(extractRecord);
+          return;
+        case 'page_numbers_pdf_render':
+          titleKey.value = LocaleKeys.convertingImages;
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          await _renderPageNumbersPdf(args);
+          return;
+        case 'page_numbers_pdf':
+          titleKey.value = LocaleKeys.pageNumbersApplying;
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          final numberPages = List<PdfPageImage>.from(args['pages'] as List);
+          final numberSettings = args['settings'] as PageNumberSettings? ??
+              const PageNumberSettings();
+          total.value = numberPages.length;
+          completed.value = 0;
+          final numberRecord = await const PageNumbersPdfService().apply(
+            pages: numberPages,
+            settings: numberSettings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(numberRecord);
+          return;
+        case 'watermark_pdf_render':
+          titleKey.value = LocaleKeys.convertingImages;
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          await _renderWatermarkPdf(args);
+          return;
+        case 'watermark_pdf':
+          titleKey.value = LocaleKeys.watermarkApplying;
+          progressLabel.value = LocaleKeys.conversionProgressPages;
+          final watermarkPages =
+              List<PdfPageImage>.from(args['pages'] as List);
+          final watermarkSettings = args['settings'] as WatermarkSettings? ??
+              const WatermarkSettings();
+          total.value = watermarkPages.length;
+          completed.value = 0;
+          final watermarkRecord = await const WatermarkPdfService().apply(
+            pages: watermarkPages,
+            settings: watermarkSettings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(watermarkRecord);
           return;
         default:
           titleKey.value = LocaleKeys.convertingPdf;
@@ -669,6 +724,106 @@ class PdfProgressController extends GetxController {
       Get.back();
     } else {
       Get.offNamed(AppRoutes.extractPages);
+    }
+  }
+
+  Future<void> _renderPageNumbersPdf(Map args) async {
+    final files = List<PdfSourceFile>.from(args['pdfFiles'] as List);
+    final append = args['append'] == true;
+    final service = const PdfToImageService();
+
+    var totalPages = 0;
+    final counts = <int>[];
+    for (final file in files) {
+      final count = await service.pageCount(file.path);
+      counts.add(count);
+      totalPages += count;
+    }
+    if (totalPages == 0) {
+      throw StateError('No pages found');
+    }
+
+    total.value = totalPages;
+    completed.value = 0;
+
+    final rendered = <PdfPageImage>[];
+    var offset = 0;
+    for (var i = 0; i < files.length; i++) {
+      final file = files[i];
+      final pages = await service.renderPdf(
+        pdfPath: file.path,
+        sourceName: file.name,
+        documentId: file.id,
+        progressOffset: offset,
+        progressTotal: totalPages,
+        onProgress: (done, all) {
+          completed.value = done;
+          total.value = all;
+        },
+      );
+      rendered.addAll(pages);
+      offset += counts[i];
+    }
+
+    final controller = Get.isRegistered<PageNumbersPdfController>()
+        ? Get.find<PageNumbersPdfController>()
+        : Get.put(PageNumbersPdfController(), permanent: true);
+    controller.setPages(rendered, append: append);
+
+    if (append) {
+      Get.back();
+    } else {
+      Get.offNamed(AppRoutes.pageNumbersPdf);
+    }
+  }
+
+  Future<void> _renderWatermarkPdf(Map args) async {
+    final files = List<PdfSourceFile>.from(args['pdfFiles'] as List);
+    final append = args['append'] == true;
+    final service = const PdfToImageService();
+
+    var totalPages = 0;
+    final counts = <int>[];
+    for (final file in files) {
+      final count = await service.pageCount(file.path);
+      counts.add(count);
+      totalPages += count;
+    }
+    if (totalPages == 0) {
+      throw StateError('No pages found');
+    }
+
+    total.value = totalPages;
+    completed.value = 0;
+
+    final rendered = <PdfPageImage>[];
+    var offset = 0;
+    for (var i = 0; i < files.length; i++) {
+      final file = files[i];
+      final pages = await service.renderPdf(
+        pdfPath: file.path,
+        sourceName: file.name,
+        documentId: file.id,
+        progressOffset: offset,
+        progressTotal: totalPages,
+        onProgress: (done, all) {
+          completed.value = done;
+          total.value = all;
+        },
+      );
+      rendered.addAll(pages);
+      offset += counts[i];
+    }
+
+    final controller = Get.isRegistered<WatermarkPdfController>()
+        ? Get.find<WatermarkPdfController>()
+        : Get.put(WatermarkPdfController(), permanent: true);
+    controller.setPages(rendered, append: append);
+
+    if (append) {
+      Get.back();
+    } else {
+      Get.offNamed(AppRoutes.watermarkPdf);
     }
   }
 

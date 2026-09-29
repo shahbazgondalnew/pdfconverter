@@ -7,6 +7,8 @@ import '../bindings/excel_to_pdf_binding.dart';
 import '../bindings/html_to_pdf_binding.dart';
 import '../bindings/image_to_pdf_binding.dart';
 import '../bindings/merge_pdf_binding.dart';
+import '../bindings/page_numbers_pdf_binding.dart';
+import '../bindings/watermark_pdf_binding.dart';
 import '../bindings/pdf_to_image_binding.dart';
 import '../bindings/pdf_to_word_binding.dart';
 import '../bindings/ppt_to_pdf_binding.dart';
@@ -30,6 +32,10 @@ import '../screens/tools/image_to_pdf/image_edit_screen.dart';
 import '../screens/tools/image_to_pdf/image_to_pdf_screen.dart';
 import '../screens/tools/merge_pdf/merge_pdf_edit_screen.dart';
 import '../screens/tools/merge_pdf/merge_pdf_screen.dart';
+import '../screens/tools/page_numbers_pdf/page_numbers_pdf_edit_screen.dart';
+import '../screens/tools/page_numbers_pdf/page_numbers_pdf_screen.dart';
+import '../screens/tools/watermark_pdf/watermark_pdf_edit_screen.dart';
+import '../screens/tools/watermark_pdf/watermark_pdf_screen.dart';
 import '../screens/tools/pdf_result/pdf_conversion_screens.dart';
 import '../screens/tools/pdf_to_image/pdf_to_image_edit_screen.dart';
 import '../screens/tools/pdf_to_image/pdf_to_image_screen.dart';
@@ -182,6 +188,26 @@ class AppPages {
       name: AppRoutes.extractPages,
       page: () => const ExtractPagesScreen(),
       binding: ExtractPagesBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pageNumbersPdf,
+      page: () => const PageNumbersPdfScreen(),
+      binding: PageNumbersPdfBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pageNumbersPdfEdit,
+      page: () => const PageNumbersPdfEditScreen(),
+      binding: PageNumbersPdfEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.watermarkPdf,
+      page: () => const WatermarkPdfScreen(),
+      binding: WatermarkPdfBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.watermarkPdfEdit,
+      page: () => const WatermarkPdfEditScreen(),
+      binding: WatermarkPdfEditBinding(),
     ),
     GetPage(
       name: AppRoutes.pdfProgress,

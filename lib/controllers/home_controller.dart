@@ -8,6 +8,8 @@ import '../controllers/excel_to_pdf_controller.dart';
 import '../controllers/html_to_pdf_controller.dart';
 import '../controllers/image_to_pdf_controller.dart';
 import '../controllers/merge_pdf_controller.dart';
+import '../controllers/page_numbers_pdf_controller.dart';
+import '../controllers/watermark_pdf_controller.dart';
 import '../controllers/pdf_to_image_controller.dart';
 import '../controllers/pdf_to_word_controller.dart';
 import '../controllers/ppt_to_pdf_controller.dart';
@@ -164,14 +166,12 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolPageNumbers,
           icon: Icons.format_list_numbered,
           color: Color(0xFF1565C0),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.watermark,
           titleKey: LocaleKeys.toolWatermark,
           icon: Icons.branding_watermark_outlined,
           color: Color(0xFF455A64),
-          comingSoon: true,
         ),
       ],
     ),
@@ -310,6 +310,12 @@ class HomeController extends GetxController {
         return;
       case ToolId.extractPages:
         ExtractPagesController.startFromHome();
+        return;
+      case ToolId.pageNumbers:
+        PageNumbersPdfController.startFromHome();
+        return;
+      case ToolId.watermark:
+        WatermarkPdfController.startFromHome();
         return;
       default:
         Get.snackbar(
