@@ -30,6 +30,22 @@ abstract final class AppRoutes {
   static const pageNumbersPdfEdit = '/tools/page-numbers-pdf-edit';
   static const watermarkPdf = '/tools/watermark-pdf';
   static const watermarkPdfEdit = '/tools/watermark-pdf-edit';
+  static const pngToJpg = '/tools/png-to-jpg';
+  static const pngToJpgEdit = '/tools/png-to-jpg-edit';
+  static const jpgToPng = '/tools/jpg-to-png';
+  static const jpgToPngEdit = '/tools/jpg-to-png-edit';
+  static const webpToPng = '/tools/webp-to-png';
+  static const webpToPngEdit = '/tools/webp-to-png-edit';
+  static const heicToJpg = '/tools/heic-to-jpg';
+  static const heicToJpgEdit = '/tools/heic-to-jpg-edit';
+  static const compressImage = '/tools/compress-image';
+  static const compressImageEdit = '/tools/compress-image-edit';
+  static const cropImage = '/tools/crop-image';
+  static const cropImageEdit = '/tools/crop-image-edit';
+  static const lockPdf = '/tools/lock-pdf';
+  static const unlockPdf = '/tools/unlock-pdf';
+  static const signPdf = '/tools/sign-pdf';
+  static const signPdfDraw = '/tools/sign-pdf-draw';
   static const pdfProgress = '/tools/pdf-progress';
   static const pdfResult = '/tools/pdf-result';
 }

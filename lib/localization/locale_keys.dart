@@ -357,4 +357,97 @@ abstract final class LocaleKeys {
   static const watermarkFrom = 'watermark_from';
   static const watermarkTo = 'watermark_to';
   static const watermarkContentRequired = 'watermark_content_required';
+
+  // PNG to JPG
+  static const pngToJpgConvert = 'png_to_jpg_convert';
+  static const pngToJpgConverting = 'png_to_jpg_converting';
+  static const pngToJpgHint = 'png_to_jpg_hint';
+  static const pngToJpgQuality = 'png_to_jpg_quality';
+  static const pngToJpgQualityHint = 'png_to_jpg_quality_hint';
+
+  // JPG to PNG
+  static const jpgToPngConvert = 'jpg_to_png_convert';
+  static const jpgToPngConverting = 'jpg_to_png_converting';
+  static const jpgToPngHint = 'jpg_to_png_hint';
+
+  // WEBP to PNG
+  static const webpToPngConvert = 'webp_to_png_convert';
+  static const webpToPngConverting = 'webp_to_png_converting';
+  static const webpToPngHint = 'webp_to_png_hint';
+
+  // HEIC to JPG
+  static const heicToJpgConvert = 'heic_to_jpg_convert';
+  static const heicToJpgConverting = 'heic_to_jpg_converting';
+  static const heicToJpgHint = 'heic_to_jpg_hint';
+  static const heicToJpgQuality = 'heic_to_jpg_quality';
+  static const heicToJpgQualityHint = 'heic_to_jpg_quality_hint';
+  static const heicToJpgDecodeFailed = 'heic_to_jpg_decode_failed';
+
+  // Compress image
+  static const compressImageAction = 'compress_image_action';
+  static const compressImageConverting = 'compress_image_converting';
+  static const compressImageHint = 'compress_image_hint';
+
+  // Crop image
+  static const cropImageSave = 'crop_image_save';
+  static const cropImageSaving = 'crop_image_saving';
+  static const cropImageHint = 'crop_image_hint';
+
+  // Lock PDF
+  static const lockPdfFile = 'lock_pdf_file';
+  static const lockPdfNoFile = 'lock_pdf_no_file';
+  static const lockPdfChange = 'lock_pdf_change';
+  static const lockPdfPassword = 'lock_pdf_password';
+  static const lockPdfConfirm = 'lock_pdf_confirm';
+  static const lockPdfPasswordHint = 'lock_pdf_password_hint';
+  static const lockPdfPasswordRequired = 'lock_pdf_password_required';
+  static const lockPdfPasswordShort = 'lock_pdf_password_short';
+  static const lockPdfPasswordMismatch = 'lock_pdf_password_mismatch';
+  static const lockPdfAction = 'lock_pdf_action';
+  static const lockPdfLocking = 'lock_pdf_locking';
+
+  // Unlock PDF
+  static const unlockPdfFile = 'unlock_pdf_file';
+  static const unlockPdfNoFile = 'unlock_pdf_no_file';
+  static const unlockPdfChange = 'unlock_pdf_change';
+  static const unlockPdfPassword = 'unlock_pdf_password';
+  static const unlockPdfPasswordHint = 'unlock_pdf_password_hint';
+  static const unlockPdfPasswordRequired = 'unlock_pdf_password_required';
+  static const unlockPdfAction = 'unlock_pdf_action';
+  static const unlockPdfUnlocking = 'unlock_pdf_unlocking';
+
+  // Sign PDF
+  static const signPdfFile = 'sign_pdf_file';
+  static const signPdfNoFile = 'sign_pdf_no_file';
+  static const signPdfChange = 'sign_pdf_change';
+  static const signPdfSignature = 'sign_pdf_signature';
+  static const signPdfDraw = 'sign_pdf_draw';
+  static const signPdfUpload = 'sign_pdf_upload';
+  static const signPdfClear = 'sign_pdf_clear';
+  static const signPdfDrawHint = 'sign_pdf_draw_hint';
+  static const signPdfDrawEmpty = 'sign_pdf_draw_empty';
+  static const signPdfDrawFailed = 'sign_pdf_draw_failed';
+  static const signPdfSignatureRequired = 'sign_pdf_signature_required';
+  static const signPdfPosition = 'sign_pdf_position';
+  static const signPdfPosBottomRight = 'sign_pdf_pos_bottom_right';
+  static const signPdfPosBottomLeft = 'sign_pdf_pos_bottom_left';
+  static const signPdfPosBottomCenter = 'sign_pdf_pos_bottom_center';
+  static const signPdfPosTopRight = 'sign_pdf_pos_top_right';
+  static const signPdfPosTopLeft = 'sign_pdf_pos_top_left';
+  static const signPdfPosCenter = 'sign_pdf_pos_center';
+  static const signPdfSize = 'sign_pdf_size';
+  static const signPdfSizeHint = 'sign_pdf_size_hint';
+  static const signPdfRange = 'sign_pdf_range';
+  static const signPdfRangeAll = 'sign_pdf_range_all';
+  static const signPdfRangeAllHint = 'sign_pdf_range_all_hint';
+  static const signPdfRangeLast = 'sign_pdf_range_last';
+  static const signPdfRangeLastHint = 'sign_pdf_range_last_hint';
+  static const signPdfRangeFirst = 'sign_pdf_range_first';
+  static const signPdfRangeFirstHint = 'sign_pdf_range_first_hint';
+  static const signPdfRangeCustom = 'sign_pdf_range_custom';
+  static const signPdfRangeCustomHint = 'sign_pdf_range_custom_hint';
+  static const signPdfFrom = 'sign_pdf_from';
+  static const signPdfTo = 'sign_pdf_to';
+  static const signPdfAction = 'sign_pdf_action';
+  static const signPdfSigning = 'sign_pdf_signing';
 }

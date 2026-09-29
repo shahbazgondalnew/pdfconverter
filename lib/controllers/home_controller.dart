@@ -8,8 +8,17 @@ import '../controllers/excel_to_pdf_controller.dart';
 import '../controllers/html_to_pdf_controller.dart';
 import '../controllers/image_to_pdf_controller.dart';
 import '../controllers/merge_pdf_controller.dart';
+import '../controllers/compress_image_controller.dart';
+import '../controllers/crop_image_controller.dart';
+import '../controllers/heic_to_jpg_controller.dart';
+import '../controllers/jpg_to_png_controller.dart';
+import '../controllers/lock_pdf_controller.dart';
 import '../controllers/page_numbers_pdf_controller.dart';
+import '../controllers/png_to_jpg_controller.dart';
+import '../controllers/sign_pdf_controller.dart';
+import '../controllers/unlock_pdf_controller.dart';
 import '../controllers/watermark_pdf_controller.dart';
+import '../controllers/webp_to_png_controller.dart';
 import '../controllers/pdf_to_image_controller.dart';
 import '../controllers/pdf_to_word_controller.dart';
 import '../controllers/ppt_to_pdf_controller.dart';
@@ -183,42 +192,36 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolPngToJpg,
           icon: Icons.swap_horiz,
           color: Color(0xFFF4511E),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.jpgToPng,
           titleKey: LocaleKeys.toolJpgToPng,
           icon: Icons.image_aspect_ratio,
           color: Color(0xFF7CB342),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.webpToPng,
           titleKey: LocaleKeys.toolWebpToPng,
           icon: Icons.transform,
           color: Color(0xFF546E7A),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.heicToJpg,
           titleKey: LocaleKeys.toolHeicToJpg,
           icon: Icons.photo_camera_back_outlined,
           color: Color(0xFFEF6C00),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.compressImage,
           titleKey: LocaleKeys.toolCompressImage,
           icon: Icons.photo_size_select_large,
           color: Color(0xFF009688),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.cropImage,
           titleKey: LocaleKeys.toolCropImage,
           icon: Icons.crop,
           color: Color(0xFF7B1FA2),
-          comingSoon: true,
         ),
       ],
     ),
@@ -230,21 +233,18 @@ class HomeController extends GetxController {
           titleKey: LocaleKeys.toolLockPdf,
           icon: Icons.lock_outline,
           color: Color(0xFFC62828),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.unlockPdf,
           titleKey: LocaleKeys.toolUnlockPdf,
           icon: Icons.lock_open,
           color: Color(0xFF2E7D32),
-          comingSoon: true,
         ),
         ToolItem(
           id: ToolId.signPdf,
           titleKey: LocaleKeys.toolSignPdf,
           icon: Icons.draw_outlined,
           color: Color(0xFF283593),
-          comingSoon: true,
         ),
       ],
     ),
@@ -316,6 +316,33 @@ class HomeController extends GetxController {
         return;
       case ToolId.watermark:
         WatermarkPdfController.startFromHome();
+        return;
+      case ToolId.pngToJpg:
+        PngToJpgController.startFromHome();
+        return;
+      case ToolId.jpgToPng:
+        JpgToPngController.startFromHome();
+        return;
+      case ToolId.webpToPng:
+        WebpToPngController.startFromHome();
+        return;
+      case ToolId.heicToJpg:
+        HeicToJpgController.startFromHome();
+        return;
+      case ToolId.compressImage:
+        CompressImageController.startFromHome();
+        return;
+      case ToolId.cropImage:
+        CropImageController.startFromHome();
+        return;
+      case ToolId.lockPdf:
+        LockPdfController.startFromHome();
+        return;
+      case ToolId.unlockPdf:
+        UnlockPdfController.startFromHome();
+        return;
+      case ToolId.signPdf:
+        SignPdfController.startFromHome();
         return;
       default:
         Get.snackbar(

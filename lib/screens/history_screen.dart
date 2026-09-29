@@ -49,6 +49,24 @@ class HistoryScreen extends GetView<HistoryController> {
         return LocaleKeys.toolPageNumbers.tr;
       case ConversionType.watermarkPdf:
         return LocaleKeys.toolWatermark.tr;
+      case ConversionType.pngToJpg:
+        return LocaleKeys.toolPngToJpg.tr;
+      case ConversionType.jpgToPng:
+        return LocaleKeys.toolJpgToPng.tr;
+      case ConversionType.webpToPng:
+        return LocaleKeys.toolWebpToPng.tr;
+      case ConversionType.heicToJpg:
+        return LocaleKeys.toolHeicToJpg.tr;
+      case ConversionType.compressImage:
+        return LocaleKeys.toolCompressImage.tr;
+      case ConversionType.cropImage:
+        return LocaleKeys.toolCropImage.tr;
+      case ConversionType.lockPdf:
+        return LocaleKeys.toolLockPdf.tr;
+      case ConversionType.unlockPdf:
+        return LocaleKeys.toolUnlockPdf.tr;
+      case ConversionType.signPdf:
+        return LocaleKeys.toolSignPdf.tr;
     }
   }
 

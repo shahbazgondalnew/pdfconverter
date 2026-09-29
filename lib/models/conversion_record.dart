@@ -16,7 +16,16 @@ enum ConversionType {
   deletePagesPdf('delete_pages_pdf'),
   extractPages('extract_pages'),
   pageNumbersPdf('page_numbers_pdf'),
-  watermarkPdf('watermark_pdf');
+  watermarkPdf('watermark_pdf'),
+  pngToJpg('png_to_jpg'),
+  jpgToPng('jpg_to_png'),
+  webpToPng('webp_to_png'),
+  heicToJpg('heic_to_jpg'),
+  compressImage('compress_image'),
+  cropImage('crop_image'),
+  lockPdf('lock_pdf'),
+  unlockPdf('unlock_pdf'),
+  signPdf('sign_pdf');
 
   const ConversionType(this.storageValue);
   final String storageValue;
@@ -29,7 +38,14 @@ enum ConversionType {
   }
 
   bool get isImageOutput =>
-      this == ConversionType.pdfToImage || this == ConversionType.extractPages;
+      this == ConversionType.pdfToImage ||
+      this == ConversionType.extractPages ||
+      this == ConversionType.pngToJpg ||
+      this == ConversionType.jpgToPng ||
+      this == ConversionType.webpToPng ||
+      this == ConversionType.heicToJpg ||
+      this == ConversionType.compressImage ||
+      this == ConversionType.cropImage;
 
   bool get isWordOutput => this == ConversionType.pdfToWord;
 }

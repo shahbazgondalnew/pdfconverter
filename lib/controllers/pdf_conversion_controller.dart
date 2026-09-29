@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
@@ -7,18 +9,28 @@ import '../models/document_models.dart';
 import '../models/image_to_pdf_models.dart';
 import '../models/page_number_models.dart';
 import '../models/pdf_to_image_models.dart';
+import '../models/sign_pdf_models.dart';
 import '../models/watermark_models.dart';
 import '../routes/app_routes.dart';
 import '../services/excel_to_pdf_service.dart';
 import '../services/html_to_pdf_service.dart';
 import '../services/image_to_pdf_service.dart';
 import '../services/merge_pdf_service.dart';
+import '../services/compress_image_service.dart';
+import '../services/crop_image_service.dart';
+import '../services/heic_to_jpg_service.dart';
+import '../services/jpg_to_png_service.dart';
+import '../services/lock_pdf_service.dart';
+import '../services/sign_pdf_service.dart';
 import '../services/page_numbers_pdf_service.dart';
 import '../services/pdf_to_image_service.dart';
 import '../services/pdf_to_word_service.dart';
+import '../services/png_to_jpg_service.dart';
 import '../services/ppt_to_pdf_service.dart';
 import '../services/text_to_pdf_service.dart';
+import '../services/unlock_pdf_service.dart';
 import '../services/watermark_pdf_service.dart';
+import '../services/webp_to_png_service.dart';
 import '../services/word_to_pdf_service.dart';
 import 'compress_pdf_controller.dart';
 import 'delete_pages_pdf_controller.dart';
@@ -307,6 +319,167 @@ class PdfProgressController extends GetxController {
           );
           completed.value = total.value;
           _finishWithResult(watermarkRecord);
+          return;
+        case 'png_to_jpg':
+          titleKey.value = LocaleKeys.pngToJpgConverting;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final pngImages = List<SelectedImage>.from(args['images'] as List);
+          final jpgQuality = args['quality'] as int? ?? 92;
+          total.value = pngImages.length;
+          completed.value = 0;
+          final pngRecord = await const PngToJpgService().convert(
+            images: pngImages,
+            quality: jpgQuality,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(pngRecord);
+          return;
+        case 'jpg_to_png':
+          titleKey.value = LocaleKeys.jpgToPngConverting;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final jpgImages = List<SelectedImage>.from(args['images'] as List);
+          total.value = jpgImages.length;
+          completed.value = 0;
+          final jpgRecord = await const JpgToPngService().convert(
+            images: jpgImages,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(jpgRecord);
+          return;
+        case 'webp_to_png':
+          titleKey.value = LocaleKeys.webpToPngConverting;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final webpImages = List<SelectedImage>.from(args['images'] as List);
+          total.value = webpImages.length;
+          completed.value = 0;
+          final webpRecord = await const WebpToPngService().convert(
+            images: webpImages,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(webpRecord);
+          return;
+        case 'heic_to_jpg':
+          titleKey.value = LocaleKeys.heicToJpgConverting;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final heicImages = List<SelectedImage>.from(args['images'] as List);
+          final heicQuality = args['quality'] as int? ?? 92;
+          total.value = heicImages.length;
+          completed.value = 0;
+          final heicRecord = await const HeicToJpgService().convert(
+            images: heicImages,
+            quality: heicQuality,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(heicRecord);
+          return;
+        case 'compress_image':
+          titleKey.value = LocaleKeys.compressImageConverting;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final compressImages =
+              List<SelectedImage>.from(args['images'] as List);
+          final compressLevel = args['level'] as ImageCompressLevel? ??
+              ImageCompressLevel.medium;
+          total.value = compressImages.length;
+          completed.value = 0;
+          final compressRecord = await const CompressImageService().convert(
+            images: compressImages,
+            level: compressLevel,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(compressRecord);
+          return;
+        case 'crop_image':
+          titleKey.value = LocaleKeys.cropImageSaving;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final cropImages = List<SelectedImage>.from(args['images'] as List);
+          total.value = cropImages.length;
+          completed.value = 0;
+          final cropRecord = await const CropImageService().save(
+            images: cropImages,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(cropRecord);
+          return;
+        case 'lock_pdf':
+          titleKey.value = LocaleKeys.lockPdfLocking;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final lockFile = args['file'] as PdfSourceFile;
+          final lockPassword = args['password'] as String? ?? '';
+          total.value = 1;
+          completed.value = 0;
+          final lockRecord = await const LockPdfService().lock(
+            file: lockFile,
+            password: lockPassword,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(lockRecord);
+          return;
+        case 'unlock_pdf':
+          titleKey.value = LocaleKeys.unlockPdfUnlocking;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final unlockFile = args['file'] as PdfSourceFile;
+          final unlockPassword = args['password'] as String? ?? '';
+          total.value = 1;
+          completed.value = 0;
+          final unlockRecord = await const UnlockPdfService().unlock(
+            file: unlockFile,
+            password: unlockPassword,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(unlockRecord);
+          return;
+        case 'sign_pdf':
+          titleKey.value = LocaleKeys.signPdfSigning;
+          progressLabel.value = LocaleKeys.conversionProgress;
+          final signFile = args['file'] as PdfSourceFile;
+          final signaturePath = args['signaturePath'] as String? ?? '';
+          final signSettings = args['settings'] as SignPdfSettings;
+          final signatureBytes = await File(signaturePath).readAsBytes();
+          total.value = 1;
+          completed.value = 0;
+          final signRecord = await const SignPdfService().sign(
+            file: signFile,
+            signaturePng: Uint8List.fromList(signatureBytes),
+            settings: signSettings,
+            onProgress: (done, all) {
+              completed.value = done;
+              total.value = all;
+            },
+          );
+          completed.value = total.value;
+          _finishWithResult(signRecord);
           return;
         default:
           titleKey.value = LocaleKeys.convertingPdf;

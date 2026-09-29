@@ -1,14 +1,23 @@
 import 'package:get/get.dart';
 
+import '../bindings/compress_image_binding.dart';
 import '../bindings/compress_pdf_binding.dart';
+import '../bindings/crop_image_binding.dart';
 import '../bindings/delete_pages_pdf_binding.dart';
 import '../bindings/extract_pages_binding.dart';
 import '../bindings/excel_to_pdf_binding.dart';
 import '../bindings/html_to_pdf_binding.dart';
 import '../bindings/image_to_pdf_binding.dart';
+import '../bindings/lock_pdf_binding.dart';
 import '../bindings/merge_pdf_binding.dart';
+import '../bindings/heic_to_jpg_binding.dart';
+import '../bindings/jpg_to_png_binding.dart';
 import '../bindings/page_numbers_pdf_binding.dart';
+import '../bindings/png_to_jpg_binding.dart';
+import '../bindings/sign_pdf_binding.dart';
+import '../bindings/unlock_pdf_binding.dart';
 import '../bindings/watermark_pdf_binding.dart';
+import '../bindings/webp_to_png_binding.dart';
 import '../bindings/pdf_to_image_binding.dart';
 import '../bindings/pdf_to_word_binding.dart';
 import '../bindings/ppt_to_pdf_binding.dart';
@@ -20,8 +29,12 @@ import '../bindings/text_to_pdf_binding.dart';
 import '../bindings/word_to_pdf_binding.dart';
 import '../controllers/pdf_conversion_controller.dart';
 import '../screens/main_navigation.dart';
+import '../screens/tools/compress_image/compress_image_edit_screen.dart';
+import '../screens/tools/compress_image/compress_image_screen.dart';
 import '../screens/tools/compress_pdf/compress_pdf_edit_screen.dart';
 import '../screens/tools/compress_pdf/compress_pdf_screen.dart';
+import '../screens/tools/crop_image/crop_image_edit_screen.dart';
+import '../screens/tools/crop_image/crop_image_screen.dart';
 import '../screens/tools/delete_pages_pdf/delete_pages_pdf_screen.dart';
 import '../screens/tools/extract_pages/extract_pages_screen.dart';
 import '../screens/tools/excel_to_pdf/excel_edit_screen.dart';
@@ -32,10 +45,22 @@ import '../screens/tools/image_to_pdf/image_edit_screen.dart';
 import '../screens/tools/image_to_pdf/image_to_pdf_screen.dart';
 import '../screens/tools/merge_pdf/merge_pdf_edit_screen.dart';
 import '../screens/tools/merge_pdf/merge_pdf_screen.dart';
+import '../screens/tools/heic_to_jpg/heic_to_jpg_edit_screen.dart';
+import '../screens/tools/heic_to_jpg/heic_to_jpg_screen.dart';
+import '../screens/tools/jpg_to_png/jpg_to_png_edit_screen.dart';
+import '../screens/tools/jpg_to_png/jpg_to_png_screen.dart';
+import '../screens/tools/lock_pdf/lock_pdf_screen.dart';
 import '../screens/tools/page_numbers_pdf/page_numbers_pdf_edit_screen.dart';
 import '../screens/tools/page_numbers_pdf/page_numbers_pdf_screen.dart';
+import '../screens/tools/png_to_jpg/png_to_jpg_edit_screen.dart';
+import '../screens/tools/png_to_jpg/png_to_jpg_screen.dart';
+import '../screens/tools/sign_pdf/sign_pdf_draw_screen.dart';
+import '../screens/tools/sign_pdf/sign_pdf_screen.dart';
+import '../screens/tools/unlock_pdf/unlock_pdf_screen.dart';
 import '../screens/tools/watermark_pdf/watermark_pdf_edit_screen.dart';
 import '../screens/tools/watermark_pdf/watermark_pdf_screen.dart';
+import '../screens/tools/webp_to_png/webp_to_png_edit_screen.dart';
+import '../screens/tools/webp_to_png/webp_to_png_screen.dart';
 import '../screens/tools/pdf_result/pdf_conversion_screens.dart';
 import '../screens/tools/pdf_to_image/pdf_to_image_edit_screen.dart';
 import '../screens/tools/pdf_to_image/pdf_to_image_screen.dart';
@@ -208,6 +233,86 @@ class AppPages {
       name: AppRoutes.watermarkPdfEdit,
       page: () => const WatermarkPdfEditScreen(),
       binding: WatermarkPdfEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pngToJpg,
+      page: () => const PngToJpgScreen(),
+      binding: PngToJpgBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.pngToJpgEdit,
+      page: () => const PngToJpgEditScreen(),
+      binding: PngToJpgEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.jpgToPng,
+      page: () => const JpgToPngScreen(),
+      binding: JpgToPngBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.jpgToPngEdit,
+      page: () => const JpgToPngEditScreen(),
+      binding: JpgToPngEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.webpToPng,
+      page: () => const WebpToPngScreen(),
+      binding: WebpToPngBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.webpToPngEdit,
+      page: () => const WebpToPngEditScreen(),
+      binding: WebpToPngEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.heicToJpg,
+      page: () => const HeicToJpgScreen(),
+      binding: HeicToJpgBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.heicToJpgEdit,
+      page: () => const HeicToJpgEditScreen(),
+      binding: HeicToJpgEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.compressImage,
+      page: () => const CompressImageScreen(),
+      binding: CompressImageBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.compressImageEdit,
+      page: () => const CompressImageEditScreen(),
+      binding: CompressImageEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.cropImage,
+      page: () => const CropImageScreen(),
+      binding: CropImageBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.cropImageEdit,
+      page: () => const CropImageEditScreen(),
+      binding: CropImageEditBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.lockPdf,
+      page: () => const LockPdfScreen(),
+      binding: LockPdfBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.unlockPdf,
+      page: () => const UnlockPdfScreen(),
+      binding: UnlockPdfBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.signPdf,
+      page: () => const SignPdfScreen(),
+      binding: SignPdfBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.signPdfDraw,
+      page: () => const SignPdfDrawScreen(),
+      binding: SignPdfDrawBinding(),
     ),
     GetPage(
       name: AppRoutes.pdfProgress,
